@@ -45,10 +45,15 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction):
     }
     // initData передан, но невалиден
     if (!config.allowInsecureAuth) {
+      console.warn(`[auth] 401 ${req.method} ${req.path}: ${result.reason}`);
       res.status(401).json({ error: 'unauthorized', reason: result.reason });
       return;
     }
   } else if (!config.allowInsecureAuth) {
+    console.warn(
+      `[auth] 401 ${req.method} ${req.path}: нет initData (тест вне Telegram?). ` +
+        `Для теста в браузере включите ALLOW_INSECURE_AUTH=true.`,
+    );
     res.status(401).json({ error: 'unauthorized', reason: 'missing initData' });
     return;
   }
