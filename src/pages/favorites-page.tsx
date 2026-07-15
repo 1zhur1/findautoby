@@ -2,10 +2,12 @@ import { Text, SectionHeader } from '@ui';
 import { HeartIllustration } from '@ui/illustrations';
 import { EmptyState } from '@ui';
 import { CarCard } from '@widgets/favorites/car-card';
-import { cars } from '@mocks/cars';
+import { useFavorites } from '@hooks';
 import { motion } from 'framer-motion';
 
 export function FavoritesPage() {
+  const { data: cars = [] } = useFavorites();
+
   return (
     <div className="pt-5">
       <motion.div

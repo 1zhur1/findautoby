@@ -1,23 +1,19 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Text, Button, SectionHeader } from '@ui';
 import { Plus } from 'lucide-react';
 import { SearchCard } from '@widgets/search/search-card';
 import { SearchIllustration } from '@ui/illustrations';
 import { EmptyState } from '@ui';
-import { searches as initialSearches } from '@mocks/searches';
+import { useSearches, useUpdateSearch } from '@hooks';
 import { motion } from 'framer-motion';
 
 export function SearchesPage() {
   const navigate = useNavigate();
-  const [searches, setSearches] = useState(initialSearches);
+  const { data: searches = [] } = useSearches();
+  const updateSearch = useUpdateSearch();
 
-  const handleToggle = (id: string) => {
-    setSearches(prev =>
-      prev.map(search =>
-        search.id === id ? { ...search, isActive: !search.isActive } : search,
-      ),
-    );
+  const handleToggle = (id: string, isActive: boolean) => {
+    updateSearch.mutate({ id, patch: { isActive: !isActive } });
   };
 
   return (
@@ -58,7 +54,7 @@ export function SearchesPage() {
               search={search}
               index={index}
               onClick={() => navigate(`/searches/${search.id}`)}
-              onToggle={() => handleToggle(search.id)}
+              onToggle={() => handleToggle(search.id, search.isActive)}
             />
           ))}
         </div>

@@ -54,6 +54,26 @@ npm run build
 npm run preview
 ```
 
+## 🗄 Бэкенд
+
+В папке [`server/`](server/) — REST API на Node + Express + TypeScript + SQLite:
+авторизация по Telegram `initData`, поиски, избранное, уведомления, профиль.
+Подробности — в [server/README.md](server/README.md).
+
+Запуск фронтенда и бэкенда вместе (два терминала):
+
+```bash
+# терминал 1 — API
+cd server && npm install && npm run dev      # http://localhost:8000
+
+# терминал 2 — фронтенд
+npm install && npm run dev                    # http://localhost:3000
+```
+
+Фронтенд обращается к API по адресу из `VITE_API_URL` (по умолчанию
+`http://localhost:8000/api`). Если бэкенд недоступен, интерфейс автоматически
+показывает моковые данные — приложение остаётся рабочим.
+
 ## 🤖 Запуск как Telegram Mini App (без ngrok)
 
 Telegram открывает Mini App только по HTTPS, поэтому нужен публичный хостинг.

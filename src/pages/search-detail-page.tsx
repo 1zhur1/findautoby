@@ -1,13 +1,27 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Edit3, Pause, Trash2, Search, Clock, Bell, MapPin } from 'lucide-react';
 import { Text, Card, Badge, SourceBadge, Button, SectionHeader } from '@ui';
-import { searches } from '@mocks/searches';
+import { useSearch, useUpdateSearch, useDeleteSearch } from '@hooks';
 import { motion } from 'framer-motion';
 
 export function SearchDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const search = searches.find((s) => s.id === id);
+  const { data: search, isLoading } = useSearch(id);
+  const updateSearch = useUpdateSearch();
+  const deleteSearch = useDeleteSearch();
+
+  const handleToggleActive = () => {
+    if (!search || !id) return;
+    updateSearch.mutate({ id, patch: { isActive: !search.isActive } });
+  };
+
+  const handleDelete = () => {
+    if (!id) return;
+    deleteSearch.mutate(id, { onSuccess: () => navigate('/searches') });
+  };
+
+  if (isLoading) return null;
 
   if (!search) {
     return (
@@ -55,7 +69,10 @@ export function SearchDetailPage() {
             <button className="rounded-xl bg-zinc-800 p-2.5 transition-colors hover:bg-zinc-700">
               <Edit3 className="h-5 w-5 text-zinc-400" />
             </button>
-            <button className="rounded-xl bg-zinc-800 p-2.5 transition-colors hover:bg-zinc-700">
+            <button
+              onClick={handleDelete}
+              className="rounded-xl bg-zinc-800 p-2.5 transition-colors hover:bg-zinc-700"
+            >
               <Trash2 className="h-5 w-5 text-danger" />
             </button>
           </div>
@@ -154,10 +171,21 @@ export function SearchDetailPage() {
         transition={{ duration: 0.4, delay: 0.3, ease: [0.4, 0, 0.2, 1] }}
         className="flex gap-3"
       >
-        <Button variant="secondary" size="lg" fullWidth leftIcon={<Pause className="h-5 w-5" />}>
+        <Button
+          variant="secondary"
+          size="lg"
+          fullWidth
+          leftIcon={<Pause className="h-5 w-5" />}
+          onClick={handleToggleActive}
+        >
           {search.isActive ? 'Приостановить' : 'Возобновить'}
         </Button>
-        <Button variant="danger" size="lg" leftIcon={<Trash2 className="h-5 w-5" />}>
+        <Button
+          variant="danger"
+          size="lg"
+          leftIcon={<Trash2 className="h-5 w-5" />}
+          onClick={handleDelete}
+        >
           Удалить
         </Button>
       </motion.div>

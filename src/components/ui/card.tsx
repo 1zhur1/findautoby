@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import { type ReactNode, type KeyboardEvent } from 'react';
 import { cn } from '@shared/utils';
 import { motion } from 'framer-motion';
 
@@ -32,13 +32,26 @@ export function Card({
   onClick,
   className,
 }: CardProps) {
-  const Component = onClick ? motion.button : 'div' as any;
-  const motionProps = onClick
-    ? { whileTap: { scale: 0.99 }, whileHover: { scale: hoverable ? 1.005 : 1 } }
+  // Кликабельную карточку рендерим как div с ролью кнопки, а не <button>,
+  // чтобы внутри могли находиться вложенные кнопки (валидный HTML).
+  const interactiveProps = onClick
+    ? {
+        role: 'button',
+        tabIndex: 0,
+        whileTap: { scale: 0.99 },
+        whileHover: { scale: hoverable ? 1.005 : 1 },
+        onClick,
+        onKeyDown: (e: KeyboardEvent) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onClick();
+          }
+        },
+      }
     : {};
 
   return (
-    <Component
+    <motion.div
       className={cn(
         'rounded-2xl text-left',
         paddingStyles[padding],
@@ -46,11 +59,10 @@ export function Card({
         hoverable && 'cursor-pointer transition-colors hover:border-zinc-700',
         className,
       )}
-      onClick={onClick}
-      {...motionProps}
+      {...interactiveProps}
     >
       {children}
-    </Component>
+    </motion.div>
   );
 }
 

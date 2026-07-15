@@ -2,10 +2,12 @@ import { Text, SectionHeader } from '@ui';
 import { BellIllustration } from '@ui/illustrations';
 import { EmptyState } from '@ui';
 import { NotificationCard } from '@widgets/notifications/notification-card';
-import { notifications } from '@mocks/notifications';
+import { useNotifications } from '@hooks';
 import { motion } from 'framer-motion';
 
 export function NotificationsPage() {
+  const { data } = useNotifications();
+  const notifications = data?.items ?? [];
   const newCount = notifications.filter((n) => n.isNew).length;
   const oldNotifications = notifications.filter((n) => !n.isNew);
 
