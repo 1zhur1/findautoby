@@ -1,4 +1,5 @@
 import { ArrowLeft, Car, Search, Fuel, Cog, MapPin, Globe, Check, ChevronDown, ChevronUp } from 'lucide-react';
+import { BrandSelector } from '@widgets/search/brand-selector';
 import { Text, Button, Input, Card } from '@ui';
 import { SourceBadge } from '@ui';
 import { useNavigate } from 'react-router-dom';
@@ -6,7 +7,6 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@shared/utils';
 
-const BRANDS = ['BMW', 'Mercedes-Benz', 'Audi', 'Volkswagen', 'Toyota', 'Lexus', 'Porsche', 'Tesla', 'Volvo', 'Skoda'];
 const FUEL_TYPES = ['Бензин', 'Дизель', 'Электро', 'Гибрид', 'Газ'];
 const TRANSMISSIONS = ['Автомат', 'Механика', 'Робот', 'Вариатор'];
 const DRIVES = ['Передний', 'Задний', 'Полный'];
@@ -192,7 +192,7 @@ function PillsSelect({
 
 function SectionContent({ id }: { id: SectionId }) {
   const [brand, setBrand] = useState('');
-  const [model, setModel] = useState('');
+  const [models, setModels] = useState<string[]>([]);
   const [priceMin, setPriceMin] = useState('');
   const [priceMax, setPriceMax] = useState('');
   const [fuelType, setFuelType] = useState('');
@@ -212,31 +212,12 @@ function SectionContent({ id }: { id: SectionId }) {
     case 'main':
       return (
         <div className="space-y-3">
-          <div>
-            <Text variant="caption" weight="semibold" className="mb-1.5 block text-zinc-400">
-              Марка
-            </Text>
-            <div className="flex flex-wrap gap-2">
-              {BRANDS.slice(0, 6).map((b) => (
-                <button
-                  key={b}
-                  onClick={() => setBrand(b)}
-                  className={cn(
-                    'rounded-lg px-3 py-1.5 text-sm font-medium transition-colors',
-                    brand === b ? 'bg-primary text-white' : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700',
-                  )}
-                >
-                  {b}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div>
-            <Text variant="caption" weight="semibold" className="mb-1.5 block text-zinc-400">
-              Модель
-            </Text>
-            <Input placeholder="Например: X5, 3 серия" value={model} onChange={(e) => setModel(e.target.value)} />
-          </div>
+          <BrandSelector
+            selectedBrand={brand}
+            selectedModels={models}
+            onBrandChange={setBrand}
+            onModelsChange={setModels}
+          />
           <div className="grid grid-cols-2 gap-3">
             <div>
               <Text variant="caption" weight="semibold" className="mb-1.5 block text-zinc-400">

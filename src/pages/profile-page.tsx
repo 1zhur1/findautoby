@@ -52,8 +52,8 @@ export function ProfilePage() {
         {statCards.map((stat) => {
           const Icon = stat.icon;
           return (
-            <Card key={stat.id} padding="sm" className="text-center">
-              <div className={`mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl ${stat.bg}`}>
+            <Card key={stat.id} padding="sm" className="flex h-full min-h-[110px] flex-col items-center justify-center text-center">
+              <div className={`mb-2 flex h-10 w-10 items-center justify-center rounded-xl ${stat.bg}`}>
                 <Icon className={`h-5 w-5 ${stat.color}`} />
               </div>
               <Text variant="h4" weight="bold">{stat.value}</Text>
@@ -70,7 +70,7 @@ export function ProfilePage() {
           const isThemeRow = item.id === 'theme';
           return (
             <motion.div key={item.id} {...fadeUp(0.12 + i * 0.04)}>
-              <Card padding="md" hoverable onClick={item.onClick}>
+              <Card padding="md" hoverable onClick={item.onClick} className="w-full">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="flex h-[42px] w-[42px] items-center justify-center rounded-xl bg-zinc-800">
@@ -78,7 +78,7 @@ export function ProfilePage() {
                     </div>
                     <div>
                       <Text variant="body" weight="medium">{item.label}</Text>
-                      {item.value && <Text variant="caption" color="tertiary">{item.value}</Text>}
+                      <Text variant="caption" color="tertiary" className={!item.value ? 'invisible' : ''}>{item.value || 'placeholder'}</Text>
                     </div>
                   </div>
                   {isThemeRow ? (

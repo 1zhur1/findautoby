@@ -24,7 +24,7 @@ export function SearchCard({ search, onToggle, onMenu, onClick, index = 0 }: Sea
       transition={{ delay: index * 0.06, duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
       whileTap={{ scale: 0.985 }}
     >
-      <Card padding="md" hoverable className="group" onClick={onClick}>
+      <Card padding="md" hoverable className="w-full group" onClick={onClick}>
         <div className="flex items-start gap-3">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10">
             <Search className="h-6 w-6 text-primary" />
@@ -47,9 +47,9 @@ export function SearchCard({ search, onToggle, onMenu, onClick, index = 0 }: Sea
                 className="shrink-0 text-zinc-500 hover:text-primary transition-colors"
               >
                 {search.isActive ? (
-                  <ToggleRight className="h-6 w-6 text-primary" />
+                  <ToggleRight className="h-7 w-7 text-primary transition-all duration-300 ease-out" />
                 ) : (
-                  <ToggleLeft className="h-6 w-6" />
+                  <ToggleLeft className="h-7 w-7 transition-all duration-300 ease-out" />
                 )}
               </button>
             </div>
