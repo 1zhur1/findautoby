@@ -1,5 +1,4 @@
 import { db } from './index.js';
-import { seedStarterContent } from './seed.js';
 import type { Profile, TelegramUser } from '../types.js';
 
 interface UserRow {
@@ -51,9 +50,7 @@ export function ensureUser(user: TelegramUser): void {
     user.language_code === 'ru' ? 'Русский' : 'English',
     new Date().toISOString(),
   );
-
-  // Наполняем новый аккаунт демо-контентом
-  seedStarterContent(user.id);
+  // Никаких пресет-данных: новый пользователь стартует с пустыми поисками/уведомлениями.
 }
 
 /** Собирает профиль пользователя вместе со статистикой. */

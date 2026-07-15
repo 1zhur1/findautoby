@@ -11,6 +11,15 @@ export interface NotificationsResponse {
   unread: number;
 }
 
+export interface Stats {
+  activeSearches: number;
+  foundToday: number;
+  unreadNotifications: number;
+}
+
+// --- Статистика ---
+export const getStats = () => apiClient.get<Stats>('/stats').then((r) => r.data);
+
 // --- Профиль ---
 export const getMe = () => apiClient.get<Profile>('/me').then((r) => r.data);
 export const updateMe = (patch: Partial<Pick<Profile, 'notificationsEnabled' | 'privacyMode' | 'language'>>) =>

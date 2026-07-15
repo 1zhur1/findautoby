@@ -116,6 +116,25 @@ export function BrandSelector({ selectedBrand, selectedModels, onBrandChange, on
                 className="pl-10"
               />
             </div>
+            {/* Выбрать все / снять все */}
+            {(selectedBrandData?.models.length ?? 0) > 0 && (
+              <button
+                onClick={() => {
+                  const all = selectedBrandData?.models ?? [];
+                  const allSelected = all.length > 0 && all.every((m) => selectedModels.includes(m));
+                  onModelsChange(allSelected ? [] : [...all]);
+                }}
+                className="mt-2 flex w-full items-center justify-between rounded-lg bg-zinc-800/60 px-4 py-2.5 text-sm font-medium text-primary transition-colors hover:bg-zinc-800"
+              >
+                <span>
+                  {(selectedBrandData?.models ?? []).every((m) => selectedModels.includes(m)) &&
+                  (selectedBrandData?.models.length ?? 0) > 0
+                    ? 'Снять все модели'
+                    : 'Выбрать все модели'}
+                </span>
+                <Check className="h-4 w-4" />
+              </button>
+            )}
             <div className="mt-2 flex max-h-48 flex-col gap-1 overflow-y-auto no-scrollbar">
               {(selectedBrandData?.models || [])
                 .filter((m) => !modelSearch || m.toLowerCase().includes(modelSearch.toLowerCase()))

@@ -1,44 +1,38 @@
 import { Search, Car, Bell } from 'lucide-react';
 import { Text, Card } from '@ui';
 import { motion } from 'framer-motion';
-
-interface StatItem {
-  id: string;
-  icon: typeof Search;
-  label: string;
-  value: string;
-  color: string;
-  bgColor: string;
-}
-
-const stats: StatItem[] = [
-  {
-    id: 'active-searches',
-    icon: Search,
-    label: 'Активные поиски',
-    value: '0',
-    color: 'text-info',
-    bgColor: 'bg-info/10',
-  },
-  {
-    id: 'found-today',
-    icon: Car,
-    label: 'Найдено сегодня',
-    value: '0',
-    color: 'text-success',
-    bgColor: 'bg-success/10',
-  },
-  {
-    id: 'total-notifications',
-    icon: Bell,
-    label: 'Уведомления',
-    value: '0',
-    color: 'text-primary',
-    bgColor: 'bg-primary/10',
-  },
-];
+import { useStats } from '@hooks';
 
 export function StatsCards() {
+  const { data } = useStats();
+
+  const stats = [
+    {
+      id: 'active-searches',
+      icon: Search,
+      label: 'Активные поиски',
+      value: String(data?.activeSearches ?? 0),
+      color: 'text-info',
+      bgColor: 'bg-info/10',
+    },
+    {
+      id: 'found-today',
+      icon: Car,
+      label: 'Найдено сегодня',
+      value: String(data?.foundToday ?? 0),
+      color: 'text-success',
+      bgColor: 'bg-success/10',
+    },
+    {
+      id: 'total-notifications',
+      icon: Bell,
+      label: 'Уведомления',
+      value: String(data?.unreadNotifications ?? 0),
+      color: 'text-primary',
+      bgColor: 'bg-primary/10',
+    },
+  ];
+
   return (
     <div className="mt-4 grid grid-cols-3 gap-3">
       {stats.map((stat, i) => {

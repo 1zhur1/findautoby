@@ -5,9 +5,14 @@ import { StatsCards } from '@widgets/home/stats-cards';
 import { BellIllustration } from '@ui/illustrations';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useTelegramUser } from '@hooks';
+import { getGreeting } from '@shared/utils';
 
 export function HomePage() {
   const navigate = useNavigate();
+  const user = useTelegramUser();
+  const greeting = getGreeting();
+  const displayName = user.username || user.firstName || 'Гость';
 
   return (
     <div className="pt-5">
@@ -20,10 +25,10 @@ export function HomePage() {
       >
         <div>
           <Text variant="caption" color="secondary" className="mb-0.5">
-            Доброе утро 👋
+            {greeting} 👋
           </Text>
           <Text variant="h2" weight="bold" className="text-white">
-            Арсений
+            {displayName}
           </Text>
         </div>
         <div className="flex items-center gap-3">

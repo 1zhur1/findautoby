@@ -2,20 +2,17 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as api from '@shared/api/endpoints';
 import type { SearchInput } from '@shared/api/endpoints';
 import { getProfileFallback } from './use-telegram-user';
-import { searches as mockSearches } from '@mocks/searches';
-import { notifications as mockNotifications } from '@mocks/notifications';
-import { cars as mockCars } from '@mocks/cars';
 
 /**
- * Оборачивает запрос: если бэкенд недоступен (например, локально без сервера),
- * возвращаем моковые данные, чтобы приложение всё равно отрисовалось.
+ * Оборачивает запрос: при недоступности бэкенда возвращаем «пустой» результат,
+ * чтобы приложение не падало. Никаких пресет/демо-данных — у каждого пользователя своё.
  */
 async function withFallback<T>(promise: Promise<T>, fallback: T): Promise<T> {
   try {
     return await promise;
   } catch (error) {
     if (import.meta.env.DEV) {
-      console.warn('[api] запрос не удался, использую моковые данные:', error);
+      console.warn('[api] запрос не удался:', error);
     }
     return fallback;
   }
@@ -23,12 +20,22 @@ async function withFallback<T>(promise: Promise<T>, fallback: T): Promise<T> {
 
 export const queryKeys = {
   me: ['me'] as const,
+  stats: ['stats'] as const,
   searches: ['searches'] as const,
   search: (id: string) => ['searches', id] as const,
   searchResults: (id: string) => ['searches', id, 'results'] as const,
   favorites: ['favorites'] as const,
   notifications: ['notifications'] as const,
 };
+
+// --- Статистика ---
+export function useStats() {
+  return useQuery({
+    queryKey: queryKeys.stats,
+    queryFn: () =>
+      withFallback(api.getStats(), { activeSearches: 0, foundToday: 0, unreadNotifications: 0 }),
+  });
+}
 
 // --- Профиль ---
 export function useProfile() {
@@ -42,7 +49,7 @@ export function useProfile() {
 export function useSearches() {
   return useQuery({
     queryKey: queryKeys.searches,
-    queryFn: () => withFallback(api.getSearches(), mockSearches),
+    queryFn: () => withFallback(api.getSearches(), []),
   });
 }
 
@@ -50,8 +57,7 @@ export function useSearch(id: string | undefined) {
   return useQuery({
     queryKey: queryKeys.search(id ?? ''),
     enabled: !!id,
-    queryFn: () =>
-      withFallback(api.getSearch(id!), mockSearches.find((s) => s.id === id) ?? null),
+    queryFn: () => withFallback(api.getSearch(id!), null),
   });
 }
 
@@ -110,7 +116,7 @@ export function useRunSearch() {
 export function useFavorites() {
   return useQuery({
     queryKey: queryKeys.favorites,
-    queryFn: () => withFallback(api.getFavorites(), mockCars),
+    queryFn: () => withFallback(api.getFavorites(), []),
   });
 }
 
@@ -127,11 +133,9 @@ export function useToggleFavorite() {
 
 // --- Уведомления ---
 export function useNotifications() {
-  const newCount = mockNotifications.filter((n) => n.isNew).length;
   return useQuery({
     queryKey: queryKeys.notifications,
-    queryFn: () =>
-      withFallback(api.getNotifications(), { items: mockNotifications, unread: newCount }),
+    queryFn: () => withFallback(api.getNotifications(), { items: [], unread: 0 }),
   });
 }
 

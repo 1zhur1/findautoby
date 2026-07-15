@@ -114,9 +114,16 @@ export function CreateSearchPage() {
     });
   };
 
+  const [error, setError] = useState<string | null>(null);
+
   const handleSubmit = () => {
+    setError(null);
     createSearch.mutate(toSearchInput(form), {
-      onSuccess: (created) => navigate(`/searches/${created.id}`),
+      onSuccess: (created) => {
+        if (created?.id) navigate(`/searches/${created.id}`);
+        else navigate('/searches');
+      },
+      onError: () => setError('Не удалось создать поиск. Проверьте соединение и попробуйте ещё раз.'),
     });
   };
 
@@ -207,6 +214,11 @@ export function CreateSearchPage() {
         transition={{ duration: 0.4, delay: 0.4, ease: [0.4, 0, 0.2, 1] }}
         className="mt-6"
       >
+        {error && (
+          <Text variant="caption" className="mb-3 block text-center text-danger">
+            {error}
+          </Text>
+        )}
         <Button
           variant="primary"
           size="xl"

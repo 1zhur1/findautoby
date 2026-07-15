@@ -13,5 +13,6 @@ export {
   useMarkNotificationsRead,
   useSearchResults,
   useRunSearch,
+  useStats,
   queryKeys,
 } from './use-api';

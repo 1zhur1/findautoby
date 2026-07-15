@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import { config } from './config.js';
 import { initSchema } from './db/index.js';
-import { seedCars } from './db/seed.js';
 import { authMiddleware } from './auth/middleware.js';
 import { startScheduler } from './services/scheduler.js';
 import { meRouter } from './routes/me.js';
@@ -10,10 +9,10 @@ import { searchesRouter } from './routes/searches.js';
 import { carsRouter } from './routes/cars.js';
 import { favoritesRouter } from './routes/favorites.js';
 import { notificationsRouter } from './routes/notifications.js';
+import { statsRouter } from './routes/stats.js';
 
-// Инициализация БД и наполнение каталога авто
+// Инициализация БД (без пресет-данных — каталог наполняется реальными объявлениями при поиске)
 initSchema();
-seedCars();
 
 const app = express();
 
@@ -36,6 +35,7 @@ app.use('/api/searches', searchesRouter);
 app.use('/api/cars', carsRouter);
 app.use('/api/favorites', favoritesRouter);
 app.use('/api/notifications', notificationsRouter);
+app.use('/api/stats', statsRouter);
 
 // 404 для неизвестных маршрутов
 app.use((_req, res) => {
