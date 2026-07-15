@@ -4,7 +4,6 @@ import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 
 export default defineConfig({
-  base: '/findautoby/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
@@ -30,6 +29,7 @@ export default defineConfig({
       '@constants': path.resolve(__dirname, './src/constants'),
       '@providers': path.resolve(__dirname, './src/providers'),
       '@routes': path.resolve(__dirname, './src/routes'),
+      '@mocks': path.resolve(__dirname, './src/mocks'),
     },
   },
   server: {

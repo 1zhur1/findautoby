@@ -5,6 +5,8 @@ import { SearchesPage } from '@pages/searches-page';
 import { FavoritesPage } from '@pages/favorites-page';
 import { NotificationsPage } from '@pages/notifications-page';
 import { ProfilePage } from '@pages/profile-page';
+import { CreateSearchPage } from '@pages/create-search-page';
+import { SearchDetailPage } from '@pages/search-detail-page';
 
 const routes: RouteObject[] = [
   {
@@ -13,9 +15,11 @@ const routes: RouteObject[] = [
     children: [
       { index: true, element: <HomePage /> },
       { path: 'searches', element: <SearchesPage /> },
+      { path: 'searches/:id', element: <SearchDetailPage /> },
       { path: 'favorites', element: <FavoritesPage /> },
       { path: 'notifications', element: <NotificationsPage /> },
       { path: 'profile', element: <ProfilePage /> },
+      { path: 'create-search', element: <CreateSearchPage /> },
     ],
   },
 ];

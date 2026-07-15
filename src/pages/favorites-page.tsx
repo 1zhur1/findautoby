@@ -1,24 +1,41 @@
-import { Heart } from 'lucide-react';
-import { Text } from '@ui';
-import { EmptyState } from '@ui/empty-state';
+import { Text, SectionHeader } from '@ui';
+import { HeartIllustration } from '@ui/illustrations';
+import { EmptyState } from '@ui';
+import { CarCard } from '@widgets/favorites/car-card';
+import { cars } from '@mocks/cars';
+import { motion } from 'framer-motion';
 
 export function FavoritesPage() {
   return (
-    <div className="pt-4">
-      <div className="mb-6">
-        <Text variant="h1" weight="bold">
+    <div className="pt-5">
+      <motion.div
+        initial={{ opacity: 0, y: -6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+        className="mb-6"
+      >
+        <Text variant="h1" weight="bold" className="mb-1">
           Избранное
         </Text>
-        <Text variant="body" color="secondary" className="mt-1">
+        <Text variant="body" color="secondary">
           Сохраненные автомобили
         </Text>
-      </div>
+      </motion.div>
 
-      <EmptyState
-        icon={<Heart className="h-8 w-8" />}
-        title="Нет избранных"
-        description="Добавьте автомобили в избранное, чтобы не потерять их"
-      />
+      {cars.length > 0 ? (
+        <div className="space-y-3">
+          <SectionHeader title="Все сохраненные" subtitle={`${cars.length} автомобилей`} />
+          {cars.map((car, index) => (
+            <CarCard key={car.id} car={car} index={index} />
+          ))}
+        </div>
+      ) : (
+        <EmptyState
+          icon={<HeartIllustration className="h-32 w-full text-zinc-600" />}
+          title="Нет избранных"
+          description="Сохраняйте интересные автомобили, чтобы не потерять их"
+        />
+      )}
     </div>
   );
 }

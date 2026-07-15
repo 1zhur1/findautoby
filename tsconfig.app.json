@@ -49,7 +49,9 @@
       "@providers": ["src/providers"],
       "@providers/*": ["src/providers/*"],
       "@routes": ["src/routes"],
-      "@routes/*": ["src/routes/*"]
+      "@routes/*": ["src/routes/*"],
+      "@mocks": ["src/mocks"],
+      "@mocks/*": ["src/mocks/*"]
     },
     "ignoreDeprecations": "6.0",
     "types": ["vite/client"],

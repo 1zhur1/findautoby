@@ -1,59 +1,57 @@
-import { type ReactNode } from 'react';
+import { type ReactNode, type ButtonHTMLAttributes } from 'react';
 import { cn } from '@shared/utils';
 import { motion } from 'framer-motion';
 
 interface CardProps {
   children: ReactNode;
-  className?: string;
-  variant?: 'default' | 'glass' | 'glass-strong';
-  padding?: 'none' | 'sm' | 'md' | 'lg';
+  padding?: 'sm' | 'md' | 'lg' | 'none';
+  variant?: 'default' | 'glass' | 'elevated';
   hoverable?: boolean;
   onClick?: () => void;
+  className?: string;
 }
 
-const paddings = {
-  none: '',
-  sm: 'p-4',
-  md: 'p-5',
-  lg: 'p-6',
+const paddingStyles = {
+  sm: 'p-4',              // 16px
+  md: 'p-5',              // 20px
+  lg: 'p-6',              // 24px
+  none: 'p-0',
 };
 
-function Card({
-  className,
+const variantStyles = {
+  default: 'bg-zinc-900/80 border border-zinc-800',
+  glass: 'bg-zinc-900/40 backdrop-blur-xl border border-white/5',
+  elevated: 'bg-zinc-900 border border-zinc-800 shadow-lg shadow-black/20',
+};
+
+export function Card({
   children,
-  variant = 'default',
   padding = 'md',
+  variant = 'default',
   hoverable,
   onClick,
+  className,
 }: CardProps) {
-  const variants = {
-    default: 'bg-zinc-900/80 dark:bg-zinc-900/80 border border-zinc-800',
-    glass: 'glass',
-    'glass-strong': 'glass-strong',
-  };
-
-  const MotionTag = onClick ? motion.button : motion.div;
+  const Component = onClick ? motion.button : 'div' as any;
+  const motionProps = onClick
+    ? { whileTap: { scale: 0.99 }, whileHover: { scale: hoverable ? 1.005 : 1 } }
+    : {};
 
   return (
-    <MotionTag
-      initial={{ opacity: 0, y: 12 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-20px' }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
-      whileHover={hoverable ? { y: -2, transition: { duration: 0.2 } } : undefined}
-      onClick={onClick}
+    <Component
       className={cn(
-        'rounded-2xl shadow-card transition-shadow duration-300 text-left',
-        variants[variant],
-        paddings[padding],
-        hoverable && 'cursor-pointer hover:shadow-elevated',
+        'rounded-2xl text-left',
+        paddingStyles[padding],
+        variantStyles[variant],
+        hoverable && 'cursor-pointer transition-colors hover:border-zinc-700',
         className,
       )}
+      onClick={onClick}
+      {...motionProps}
     >
       {children}
-    </MotionTag>
+    </Component>
   );
 }
 
-export { Card };
 export type { CardProps };

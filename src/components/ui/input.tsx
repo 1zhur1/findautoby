@@ -1,57 +1,36 @@
-import { forwardRef, type InputHTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, type InputHTMLAttributes } from 'react';
 import { cn } from '@shared/utils';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
-  leftIcon?: ReactNode;
-  rightIcon?: ReactNode;
-  fullWidth?: boolean;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, label, error, leftIcon, rightIcon, fullWidth, id, ...props }, ref) => {
-    const inputId = id ?? label?.toLowerCase().replace(/\s+/g, '-');
-
+  ({ className, label, error, id, ...props }, ref) => {
     return (
-      <div className={cn('flex flex-col gap-1.5', fullWidth && 'w-full')}>
+      <div className="w-full">
         {label && (
-          <label
-            htmlFor={inputId}
-            className="text-sm font-medium text-zinc-400 dark:text-zinc-400"
-          >
+          <label htmlFor={id} className="mb-1.5 block text-xs font-medium text-zinc-400">
             {label}
           </label>
         )}
-        <div className="relative">
-          {leftIcon && (
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">
-              {leftIcon}
-            </div>
+        <input
+          ref={ref}
+          id={id}
+          className={cn(
+            'h-[52px] w-full rounded-xl border bg-zinc-900/60 px-4 text-[15px] text-white',
+            'placeholder:text-zinc-500',
+            'transition-colors duration-200',
+            'focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50',
+            'disabled:opacity-40 disabled:cursor-not-allowed',
+            error ? 'border-danger/50 focus:ring-danger/30' : 'border-zinc-800 hover:border-zinc-700',
+            className,
           )}
-          <input
-            ref={ref}
-            id={inputId}
-            className={cn(
-              'h-13 w-full rounded-xl border border-zinc-800 bg-zinc-900/50 px-4 text-base text-white',
-              'placeholder:text-zinc-500',
-              'focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20',
-              'transition-all duration-200',
-              leftIcon && 'pl-12',
-              rightIcon && 'pr-12',
-              error && 'border-danger/50 focus:border-danger/50 focus:ring-danger/20',
-              className,
-            )}
-            {...props}
-          />
-          {rightIcon && (
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500">
-              {rightIcon}
-            </div>
-          )}
-        </div>
+          {...props}
+        />
         {error && (
-          <p className="text-xs text-danger mt-0.5">{error}</p>
+          <p className="mt-1 text-xs text-danger">{error}</p>
         )}
       </div>
     );

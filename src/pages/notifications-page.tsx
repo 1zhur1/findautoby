@@ -1,24 +1,69 @@
-import { Bell } from 'lucide-react';
-import { Text } from '@ui';
-import { EmptyState } from '@ui/empty-state';
+import { Text, SectionHeader } from '@ui';
+import { BellIllustration } from '@ui/illustrations';
+import { EmptyState } from '@ui';
+import { NotificationCard } from '@widgets/notifications/notification-card';
+import { notifications } from '@mocks/notifications';
+import { motion } from 'framer-motion';
 
 export function NotificationsPage() {
+  const newCount = notifications.filter((n) => n.isNew).length;
+  const oldNotifications = notifications.filter((n) => !n.isNew);
+
   return (
-    <div className="pt-4">
-      <div className="mb-6">
-        <Text variant="h1" weight="bold">
+    <div className="pt-5">
+      <motion.div
+        initial={{ opacity: 0, y: -6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+        className="mb-6"
+      >
+        <Text variant="h1" weight="bold" className="mb-1">
           Уведомления
         </Text>
-        <Text variant="body" color="secondary" className="mt-1">
-          Все уведомления о новых автомобилях
+        <Text variant="body" color="secondary">
+          {newCount > 0
+            ? `${newCount} новых уведомлений`
+            : 'Нет новых уведомлений'}
         </Text>
-      </div>
+      </motion.div>
 
-      <EmptyState
-        icon={<Bell className="h-8 w-8" />}
-        title="Нет уведомлений"
-        description="Мы сообщим вам, когда найдем подходящие автомобили"
-      />
+      {notifications.length > 0 ? (
+        <div className="space-y-3">
+          {newCount > 0 && (
+            <>
+              <SectionHeader title="Новые" subtitle={`${newCount} уведомления`} />
+              {notifications
+                .filter((n) => n.isNew)
+                .map((notification, index) => (
+                  <NotificationCard
+                    key={notification.id}
+                    notification={notification}
+                    index={index}
+                  />
+                ))}
+            </>
+          )}
+
+          {oldNotifications.length > 0 && (
+            <>
+              <SectionHeader title="Ранее" className="mt-8" />
+              {oldNotifications.map((notification, index) => (
+                <NotificationCard
+                  key={notification.id}
+                  notification={notification}
+                  index={index}
+                />
+              ))}
+            </>
+          )}
+        </div>
+      ) : (
+        <EmptyState
+          icon={<BellIllustration className="h-32 w-full text-zinc-600" />}
+          title="Нет уведомлений"
+          description="Новые уведомления о найденных автомобилях будут появляться здесь"
+        />
+      )}
     </div>
   );
 }

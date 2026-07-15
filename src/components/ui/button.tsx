@@ -16,7 +16,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     {
       className,
       variant = 'primary',
-      size = 'lg',
+      size = 'md',
       isLoading,
       leftIcon,
       rightIcon,
@@ -29,31 +29,32 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     const variants = {
       primary:
-        'bg-primary text-white hover:bg-primary-dark active:bg-primary-dark shadow-lg shadow-primary/25',
+        'bg-primary text-white hover:bg-primary-dark active:bg-primary-dark shadow-lg shadow-primary/20',
       secondary:
-        'bg-zinc-800 dark:bg-zinc-800 text-white hover:bg-zinc-700 active:bg-zinc-600 border border-zinc-700',
+        'bg-zinc-800 text-white hover:bg-zinc-700 active:bg-zinc-600 border border-zinc-700/50',
       ghost:
-        'bg-transparent text-zinc-300 hover:bg-zinc-800/50 active:bg-zinc-800',
+        'bg-transparent text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50',
       danger:
-        'bg-danger/10 text-danger hover:bg-danger/20 active:bg-danger/30 border border-danger/20',
+        'bg-danger/10 text-danger hover:bg-danger/20 active:bg-danger/30 border border-danger/15',
     };
 
     const sizes = {
-      sm: 'h-9 px-3 text-sm rounded-lg gap-1.5',
-      md: 'h-11 px-4 text-sm rounded-xl gap-2',
-      lg: 'h-13 px-6 text-base rounded-xl gap-2',
-      xl: 'h-15 px-8 text-lg rounded-2xl gap-2.5',
+      sm: 'h-10 px-4 text-sm gap-1.5',
+      md: 'h-[52px] px-6 text-[15px] gap-2',
+      lg: 'h-[56px] px-8 text-base gap-2.5',
+      xl: 'h-[60px] px-10 text-lg gap-3',
     };
 
     return (
       <motion.button
         ref={ref}
-        whileTap={{ scale: 0.97 }}
-        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        whileHover={{ scale: disabled ? 1 : 1.01 }}
         className={cn(
-          'inline-flex items-center justify-center font-medium transition-colors duration-200',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
-          'disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed',
+          'inline-flex items-center justify-center font-medium rounded-xl',
+          'transition-colors duration-200',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',
+          'disabled:opacity-40 disabled:pointer-events-none',
           variants[variant],
           sizes[size],
           fullWidth && 'w-full',
@@ -63,25 +64,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...(props as React.ComponentProps<typeof motion.button>)}
       >
         {isLoading ? (
-          <svg
-            className="animate-spin h-5 w-5"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            />
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-            />
+          <svg className="animate-spin h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" className="opacity-25" />
+            <path d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" fill="currentColor" className="opacity-75" />
           </svg>
         ) : (
           leftIcon
