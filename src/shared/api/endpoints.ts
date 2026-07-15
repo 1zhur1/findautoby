@@ -25,6 +25,28 @@ export const updateSearch = (id: string, patch: SearchInput) =>
   apiClient.patch<Search>(`/searches/${id}`, patch).then((r) => r.data);
 export const deleteSearch = (id: string) => apiClient.delete(`/searches/${id}`).then(() => undefined);
 
+export interface SourceRunResult {
+  source: 'onliner' | 'kufar' | 'avby';
+  ok: boolean;
+  count: number;
+  error?: string;
+}
+export interface RunSearchResponse {
+  searchId: string;
+  total: number;
+  added: number;
+  perSource: SourceRunResult[];
+  cars: Car[];
+}
+
+/** Запустить парсинг площадок по сохранённому поиску. */
+export const runSearchNow = (id: string) =>
+  apiClient.post<RunSearchResponse>(`/searches/${id}/run`).then((r) => r.data);
+
+/** Сохранённые результаты поиска. */
+export const getSearchResults = (id: string) =>
+  apiClient.get<Car[]>(`/searches/${id}/results`).then((r) => r.data);
+
 // --- Авто и избранное ---
 export const getCars = () => apiClient.get<Car[]>('/cars').then((r) => r.data);
 export const getFavorites = () => apiClient.get<Car[]>('/favorites').then((r) => r.data);

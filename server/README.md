@@ -79,8 +79,47 @@ Authorization: tma <initData>
 | POST   | `/api/notifications/read`     | Пометить все прочитанными             |
 | POST   | `/api/notifications/:id/read` | Пометить одно прочитанным             |
 
+## Парсинг площадок
+
+Поиск запускается автоматически при **создании** поиска (фоново) и по кнопке
+«Обновить». Логика — в `src/services/search-runner.ts`, адаптеры — в `src/parsers/sources/`.
+
+| Площадка | Способ | Статус |
+| --- | --- | --- |
+| **Onliner** | Открытый JSON API `ab.onliner.by/sdapi/ab.api` | ✅ работает из коробки |
+| **Kufar** | Открытый JSON API `api.kufar.by/search-api` | ✅ работает из коробки |
+| **av.by** | Headless-браузер (patchright), обход SafeLine WAF | ⚠️ опционально, см. ниже |
+
+### av.by — обход SafeLine WAF
+
+av.by закрыт антиботом **SafeLine** (интерактивный челлендж «Confirm You Are Human»
++ детект автоматизации через CDP `Runtime.enable` → «Debugging Detected»). Обычный
+`fetch` и простые парсеры получают только страницу-челлендж (403/468).
+
+Обход — реальный headless-браузер через **patchright** (патченный Playwright, скрывает
+утечку `Runtime.enable`). Настройка **на сервере (Ubuntu 22.04)**:
+
+```bash
+cd server
+npm install
+npx patchright install --with-deps chromium   # браузер + системные библиотеки
+
+# 1) Проверить обход и разведать формат данных:
+node verify-avby.mjs
+#    Если "SafeLine passed: true" и печатаются ключи оффера — обход работает.
+#    По этим ключам при необходимости поправьте маппер в src/parsers/sources/avby.ts
+
+# 2) Включить источник:
+#    в .env → AVBY_ENABLED=true
+```
+
+> **Важно:** на Windows патченные форки Playwright не запускаются (`spawn UNKNOWN`) —
+> это ограничение ОС, не кода. Проверять и запускать av.by нужно на Linux-сервере.
+> Пока `AVBY_ENABLED=false`, источник тихо пропускается и не влияет на Onliner/Kufar.
+> SafeLine — движущаяся цель: если обход перестанет работать, альтернатива —
+> платный scraping-API (ScrapFly/ZenRows) в том же адаптере.
+
 ## Что дальше
 
-- Реальные парсеры av.by / onliner / kufar (сейчас каталог — сид-данные).
 - Telegram-бот с рассылкой уведомлений по активным поискам.
 - Периодическая проверка поисков (cron) и запись новых объявлений.

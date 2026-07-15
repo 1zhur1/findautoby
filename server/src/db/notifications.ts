@@ -1,5 +1,25 @@
+import { randomUUID } from 'node:crypto';
 import { db } from './index.js';
-import type { Notification } from '../types.js';
+import type { Car, Notification } from '../types.js';
+
+/** Создаёт уведомление о новом найденном авто. */
+export function createCarNotification(userId: number, car: Car, message: string): void {
+  const notif: Notification = {
+    id: randomUUID(),
+    carId: car.id,
+    carTitle: car.title,
+    price: car.price,
+    currency: car.currency,
+    source: car.source,
+    message,
+    isNew: true,
+    createdAt: new Date().toISOString(),
+    imageUrl: car.imageUrl,
+  };
+  db.prepare(
+    'INSERT INTO notifications (id, user_id, is_new, created_at, data) VALUES (?, ?, 1, ?, ?)',
+  ).run(notif.id, userId, notif.createdAt, JSON.stringify(notif));
+}
 
 /** Уведомления пользователя (новые сверху). */
 export function listNotifications(userId: number): Notification[] {

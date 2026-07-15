@@ -25,6 +25,7 @@ export const queryKeys = {
   me: ['me'] as const,
   searches: ['searches'] as const,
   search: (id: string) => ['searches', id] as const,
+  searchResults: (id: string) => ['searches', id, 'results'] as const,
   favorites: ['favorites'] as const,
   notifications: ['notifications'] as const,
 };
@@ -78,6 +79,30 @@ export function useDeleteSearch() {
   return useMutation({
     mutationFn: (id: string) => api.deleteSearch(id),
     onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.searches }),
+  });
+}
+
+// --- Парсинг результатов ---
+export function useSearchResults(id: string | undefined) {
+  return useQuery({
+    queryKey: queryKeys.searchResults(id ?? ''),
+    enabled: !!id,
+    queryFn: () => withFallback(api.getSearchResults(id!), [] as Awaited<ReturnType<typeof api.getSearchResults>>),
+    // Пока результатов нет (например, идёт фоновый парсинг после создания),
+    // опрашиваем каждые 4с; как только появились — прекращаем.
+    refetchInterval: (query) => (query.state.data && query.state.data.length > 0 ? false : 4000),
+  });
+}
+
+export function useRunSearch() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => api.runSearchNow(id),
+    onSuccess: (_data, id) => {
+      qc.invalidateQueries({ queryKey: queryKeys.searchResults(id) });
+      qc.invalidateQueries({ queryKey: queryKeys.searches });
+      qc.invalidateQueries({ queryKey: queryKeys.notifications });
+    },
   });
 }
 

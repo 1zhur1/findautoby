@@ -74,6 +74,20 @@ export function updateSearch(
   return updated;
 }
 
+/** Обновляет статистику поиска после прогона парсеров. */
+export function touchSearchStats(userId: number, id: string, foundCount: number): void {
+  const current = getSearch(userId, id);
+  if (!current) return;
+  const now = new Date().toISOString();
+  const updated: Search = { ...current, foundCount, lastCheckedAt: now, updatedAt: now };
+  db.prepare('UPDATE searches SET updated_at = ?, data = ? WHERE user_id = ? AND id = ?').run(
+    now,
+    JSON.stringify(updated),
+    userId,
+    id,
+  );
+}
+
 export function deleteSearch(userId: number, id: string): boolean {
   const info = db
     .prepare('DELETE FROM searches WHERE user_id = ? AND id = ?')

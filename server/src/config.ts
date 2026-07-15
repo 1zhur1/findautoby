@@ -13,6 +13,10 @@ export const config = {
   corsOrigin: process.env.CORS_ORIGIN ?? '*',
   databasePath: process.env.DATABASE_PATH ?? './data/findauto.db',
   isProduction: process.env.NODE_ENV === 'production',
+  // Парсинг av.by через headless-браузер (обход SafeLine WAF). По умолчанию выключен —
+  // требует patchright + `npx patchright install chromium` и проверки на сервере.
+  avbyEnabled: bool(process.env.AVBY_ENABLED, false),
+  avbyHeadful: bool(process.env.AVBY_HEADFUL, false),
 } as const;
 
 // Предупреждаем о небезопасной конфигурации на старте

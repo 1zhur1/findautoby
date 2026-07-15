@@ -116,7 +116,7 @@ export function CreateSearchPage() {
 
   const handleSubmit = () => {
     createSearch.mutate(toSearchInput(form), {
-      onSuccess: () => navigate('/searches'),
+      onSuccess: (created) => navigate(`/searches/${created.id}`),
     });
   };
 

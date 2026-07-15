@@ -11,5 +11,7 @@ export {
   useToggleFavorite,
   useNotifications,
   useMarkNotificationsRead,
+  useSearchResults,
+  useRunSearch,
   queryKeys,
 } from './use-api';

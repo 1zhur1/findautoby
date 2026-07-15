@@ -59,5 +59,14 @@ export function initSchema(): void {
       data       TEXT NOT NULL
     );
     CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id);
+
+    -- Найденные по поиску объявления (для детекции новинок и ленты результатов)
+    CREATE TABLE IF NOT EXISTS search_results (
+      search_id  TEXT NOT NULL REFERENCES searches(id) ON DELETE CASCADE,
+      car_id     TEXT NOT NULL REFERENCES cars(id) ON DELETE CASCADE,
+      first_seen TEXT NOT NULL,
+      PRIMARY KEY (search_id, car_id)
+    );
+    CREATE INDEX IF NOT EXISTS idx_search_results_search ON search_results(search_id);
   `);
 }

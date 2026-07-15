@@ -1,7 +1,9 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Edit3, Pause, Trash2, Search, Clock, Bell, MapPin } from 'lucide-react';
-import { Text, Card, Badge, SourceBadge, Button, SectionHeader } from '@ui';
-import { useSearch, useUpdateSearch, useDeleteSearch } from '@hooks';
+import { ArrowLeft, Edit3, Pause, Trash2, Search, Clock, Bell, MapPin, RefreshCw } from 'lucide-react';
+import { Text, Card, Badge, SourceBadge, Button, SectionHeader, EmptyState } from '@ui';
+import { useSearch, useUpdateSearch, useDeleteSearch, useRunSearch, useSearchResults } from '@hooks';
+import { CarCard } from '@widgets/favorites/car-card';
+import { CarSearchIllustration } from '@ui/illustrations';
 import { motion } from 'framer-motion';
 
 export function SearchDetailPage() {
@@ -10,6 +12,12 @@ export function SearchDetailPage() {
   const { data: search, isLoading } = useSearch(id);
   const updateSearch = useUpdateSearch();
   const deleteSearch = useDeleteSearch();
+  const runSearch = useRunSearch();
+  const { data: results = [] } = useSearchResults(id);
+
+  const handleRun = () => {
+    if (id) runSearch.mutate(id);
+  };
 
   const handleToggleActive = () => {
     if (!search || !id) return;
@@ -188,6 +196,60 @@ export function SearchDetailPage() {
         >
           Удалить
         </Button>
+      </motion.div>
+
+      {/* Найденные объявления */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.35, ease: [0.4, 0, 0.2, 1] }}
+        className="mt-8"
+      >
+        <div className="mb-3 flex items-center justify-between">
+          <SectionHeader
+            title="Найденные объявления"
+            subtitle={results.length ? `${results.length} авто` : undefined}
+          />
+          <Button
+            variant="secondary"
+            size="sm"
+            leftIcon={<RefreshCw className={`h-4 w-4 ${runSearch.isPending ? 'animate-spin' : ''}`} />}
+            onClick={handleRun}
+            disabled={runSearch.isPending}
+          >
+            {runSearch.isPending ? 'Ищем…' : 'Обновить'}
+          </Button>
+        </div>
+
+        {runSearch.isError && (
+          <Text variant="caption" color="tertiary" className="mb-3 block text-danger">
+            Не удалось получить объявления. Попробуйте позже.
+          </Text>
+        )}
+
+        {runSearch.data && (
+          <div className="mb-4 flex flex-wrap gap-2">
+            {runSearch.data.perSource.map((s) => (
+              <Badge key={s.source} variant={s.ok && s.count > 0 ? 'success' : 'default'} size="sm">
+                {s.source}: {s.ok ? s.count : '—'}
+              </Badge>
+            ))}
+          </div>
+        )}
+
+        {results.length > 0 ? (
+          <div className="space-y-3">
+            {results.map((car, index) => (
+              <CarCard key={car.id} car={car} index={index} />
+            ))}
+          </div>
+        ) : (
+          <EmptyState
+            icon={<CarSearchIllustration className="h-28 w-full text-zinc-600" />}
+            title="Пока нет объявлений"
+            description="Нажмите «Обновить», чтобы найти автомобили по этому поиску на площадках"
+          />
+        )}
       </motion.div>
 
       <div className="h-8" />
