@@ -31,7 +31,7 @@ export function CarCard({ car, index = 0, onOpen, onFavorite }: CarCardProps) {
       transition={{ delay: index * 0.05, duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
       whileTap={{ scale: 0.99 }}
     >
-      <Card padding="md" hoverable>
+      <Card padding="md" hoverable className="w-full">
         <div className="flex gap-3">
           {/* Image placeholder */}
           <div className="relative h-24 w-32 shrink-0 overflow-hidden rounded-xl bg-zinc-800">

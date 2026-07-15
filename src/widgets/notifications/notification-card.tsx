@@ -32,7 +32,7 @@ export function NotificationCard({ notification, index = 0, onClick }: Notificat
         hoverable
         onClick={onClick}
         className={cn(
-          'relative overflow-hidden',
+          'relative w-full overflow-hidden',
           notification.isNew && 'border-l-2 border-l-primary',
         )}
       >
