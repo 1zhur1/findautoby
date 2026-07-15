@@ -2,6 +2,7 @@ import { db } from '../db/index.js';
 import { upsertCar } from '../db/cars.js';
 import { getSearch, touchSearchStats } from '../db/searches.js';
 import { createCarNotification } from '../db/notifications.js';
+import { sendCarMessages } from '../telegram/notify.js';
 import { runSources, searchToFilters, type SourceRunResult } from '../parsers/index.js';
 import type { Car, Source } from '../types.js';
 
@@ -48,10 +49,17 @@ export async function runSearch(userId: number, searchId: string): Promise<Searc
   });
   persist();
 
-  // Уведомления только со второго прохода (первый — «посев» без спама)
+  // Уведомления только со второго прохода (первый — «посев» без спама).
+  // Первый проход при создании поиска уведомляется отдельно, с задержкой 30с (см. маршрут).
   if (!isFirstRun) {
     for (const car of newCars.slice(0, MAX_NOTIFICATIONS_PER_RUN)) {
       createCarNotification(userId, car, 'Новое объявление по вашему поиску');
+    }
+    // Личные сообщения в Telegram по каждой новой машине (если поиск активен)
+    if (search.isActive && newCars.length) {
+      void sendCarMessages(userId, newCars).catch((e) =>
+        console.error('[telegram] рассылка новых авто:', e),
+      );
     }
   }
 

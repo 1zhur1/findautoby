@@ -8,10 +8,14 @@ import {
   updateSearch,
 } from '../db/searches.js';
 import { runSearch, getSearchResults } from '../services/search-runner.js';
+import { notifySearchResults } from '../telegram/notify.js';
 import { runSources, type ParserFilters } from '../parsers/index.js';
 import type { Source } from '../types.js';
 
 export const searchesRouter = Router();
+
+// Через сколько после создания поиска слать сводку в личку
+const SUMMARY_DELAY_MS = 30000;
 
 // Схема входных данных поиска. Все поля опциональны; лишние игнорируются.
 const searchInputSchema = z
@@ -64,13 +68,24 @@ searchesRouter.post('/', (req, res) => {
     res.status(400).json({ error: 'invalid_body', issues: parsed.error.issues });
     return;
   }
-  const search = createSearch(req.tgUser!.id, parsed.data);
+  const userId = req.tgUser!.id;
+  const search = createSearch(userId, parsed.data);
   res.status(201).json(search);
 
   // Сразу запускаем парсинг в фоне — чтобы объявления появились без нажатия «Обновить»
-  void runSearch(req.tgUser!.id, search.id).catch((e) =>
+  void runSearch(userId, search.id).catch((e) =>
     console.error('[create-run] ошибка фонового парсинга:', e),
   );
+
+  // Через 30с шлём в личку сводку «найдено N» + по сообщению на каждое авто (если активен)
+  setTimeout(() => {
+    const fresh = getSearch(userId, search.id);
+    if (!fresh) return;
+    const results = getSearchResults(search.id);
+    void notifySearchResults(userId, fresh, results).catch((e) =>
+      console.error('[telegram] сводка по поиску:', e),
+    );
+  }, SUMMARY_DELAY_MS);
 });
 
 // Живой предпросмотр парсинга по произвольным фильтрам (без сохранения)

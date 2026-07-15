@@ -33,8 +33,15 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3000,
+    port: 3013,
     host: true,
+  },
+  preview: {
+    port: 3013,
+    strictPort: true,
+    host: true,
+    // Домен, с которого разрешено обращаться к preview-серверу за nginx
+    allowedHosts: ['auto.minelife.club'],
   },
   build: {
     outDir: 'dist',
