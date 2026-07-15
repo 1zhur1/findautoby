@@ -110,11 +110,14 @@ export const avbySource: CarSource = {
         }
       });
 
+      // Прогрев: сначала главная (устанавливаем сессию SafeLine), затем страница фильтра
+      await page.goto('https://cars.av.by/', { waitUntil: 'domcontentloaded', timeout: 40000 });
+      await passSafeline(page);
       await page.goto('https://cars.av.by/filter', { waitUntil: 'domcontentloaded', timeout: 40000 });
 
       const passed = await passSafeline(page);
       if (!passed) {
-        console.warn('[avby] SafeLine не пройден — источник пропущен');
+        console.warn('[avby] доступ не получен (SafeLine/403) — источник пропущен. При блоке по IP задайте AVBY_PROXY.');
         return [];
       }
 

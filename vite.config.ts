@@ -41,7 +41,7 @@ export default defineConfig({
     strictPort: true,
     host: true,
     // Домен, с которого разрешено обращаться к preview-серверу за nginx
-    allowedHosts: ['auto.minelife.club'],
+    allowedHosts: ['auto.minestill.fun'],
   },
   build: {
     outDir: 'dist',

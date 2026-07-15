@@ -19,7 +19,9 @@ async function createContext(): Promise<any> {
     headless: !config.avbyHeadful,
     channel: 'chromium',
     locale: 'ru-RU',
+    timezoneId: 'Europe/Minsk',
     viewport: { width: 1366, height: 900 },
+    proxy: config.avbyProxy ? { server: config.avbyProxy } : undefined,
     args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
   });
   return context;
@@ -48,18 +50,22 @@ export async function closeBrowser(): Promise<void> {
 }
 
 const CHALLENGE_MARKERS = /Confirm You Are Human|Система безопасности|Debugging Detected|\.safeline/;
+const BLOCK_MARKERS = /403 Forbidden|Access Denied|Доступ запрещён|Access to this resource/i;
 
 /**
  * Проходит SafeLine-челлендж на текущей странице (если он есть):
  * жмёт кнопку подтверждения и ждёт появления реального контента.
- * Возвращает true, если челлендж пройден (или его не было).
+ * Возвращает true только если контент реальный (не челлендж и не страница-блокировка).
  */
 export async function passSafeline(page: any, timeoutMs = 25000): Promise<boolean> {
   const deadline = Date.now() + timeoutMs;
 
   while (Date.now() < deadline) {
     const html: string = await page.content().catch(() => '');
-    if (!CHALLENGE_MARKERS.test(html)) return true; // челленджа нет — контент реальный
+    if (!CHALLENGE_MARKERS.test(html)) {
+      // Челленджа нет. Но это может быть страница-блокировка (403) — тогда не пройдено.
+      return !BLOCK_MARKERS.test(html);
+    }
 
     // Пробуем нажать кнопку подтверждения SafeLine
     try {
@@ -74,5 +80,5 @@ export async function passSafeline(page: any, timeoutMs = 25000): Promise<boolea
   }
 
   const finalHtml: string = await page.content().catch(() => '');
-  return !CHALLENGE_MARKERS.test(finalHtml);
+  return !CHALLENGE_MARKERS.test(finalHtml) && !BLOCK_MARKERS.test(finalHtml);
 }

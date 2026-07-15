@@ -1,13 +1,13 @@
-# Деплой FindAuto на auto.minelife.club (Ubuntu 22.04)
+# Деплой FindAuto на auto.minestill.fun (Ubuntu 22.04)
 
 Схема: **nginx** (443) → фронтенд `127.0.0.1:3013` и API `127.0.0.1:4245`.
 
 ## 1. DNS
 
-Создайте A-запись: `auto.minelife.club` → IP вашего сервера. Дождитесь применения:
+Создайте A-запись: `auto.minestill.fun` → IP вашего сервера. Дождитесь применения:
 
 ```bash
-dig +short auto.minelife.club
+dig +short auto.minestill.fun
 ```
 
 ## 2. Пакеты
@@ -47,51 +47,63 @@ pm2 save
 pm2 startup                 # автозапуск pm2 после ребута (выполните выведенную команду)
 ```
 
-## 4. nginx + SSL
+## 4. nginx + SSL (домен за Cloudflare)
 
+`auto.minestill.fun` проксируется через Cloudflare (оранжевое облако — DNS указывает
+на IP Cloudflare `2606:4700…`). Самый надёжный путь — **Cloudflare Origin Certificate**
+(без certbot, сертификат на 15 лет).
+
+**4.1. Выпустить Origin-сертификат**
+Cloudflare Dashboard → домен → **SSL/TLS → Origin Server → Create Certificate**
+→ RSA, hostnames `auto.minestill.fun` (можно `*.minestill.fun`) → Create.
+Скопируйте **Origin Certificate** и **Private Key**.
+
+**4.2. Положить на сервер**
+```bash
+sudo mkdir -p /etc/nginx/ssl
+sudo nano /etc/nginx/ssl/minestill-origin.pem   # вставить Origin Certificate
+sudo nano /etc/nginx/ssl/minestill-origin.key   # вставить Private Key
+sudo chmod 600 /etc/nginx/ssl/minestill-origin.key
+```
+
+**4.3. Включить конфиг**
+```bash
+sudo cp deploy/nginx/auto.minestill.fun.conf /etc/nginx/sites-available/auto.minestill.fun.conf
+sudo ln -s /etc/nginx/sites-available/auto.minestill.fun.conf /etc/nginx/sites-enabled/
+sudo rm -f /etc/nginx/sites-enabled/auto.minelife.club.conf   # убрать старый, если был
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+**4.4. Режим SSL в Cloudflare**
+**SSL/TLS → Overview → Full (strict)** (обязательно). Опционально **Always Use HTTPS → On**.
+
+Готово — certbot не нужен, сертификат не истекает 15 лет.
+
+---
+
+**Альтернатива — Let's Encrypt напрямую (без Cloudflare-прокси).**
+Переведите DNS-запись в Cloudflare в **DNS only** (серое облако), чтобы домен указывал
+прямо на IP сервера, затем:
 ```bash
 sudo mkdir -p /var/www/certbot
-
-# Скопировать конфиг
-sudo cp deploy/nginx/auto.minelife.club.conf /etc/nginx/sites-available/auto.minelife.club.conf
-sudo ln -s /etc/nginx/sites-available/auto.minelife.club.conf /etc/nginx/sites-enabled/
-
-# ВАЖНО: сертификатов ещё нет — временно закомментируйте весь блок `server { listen 443 ... }`
-# в конфиге, оставив только блок :80. Затем:
-sudo nginx -t && sudo systemctl reload nginx
+# в конфиге временно оставьте только блок :80 (закомментируйте :443), reload nginx
+sudo certbot certonly --webroot -w /var/www/certbot -d auto.minestill.fun \
+  --agree-tos -m admin@minestill.fun --no-eff-email
+# затем пропишите пути /etc/letsencrypt/live/auto.minestill.fun/{fullchain,privkey}.pem
 ```
 
-Получить сертификат (**команда certbot**):
-
-```bash
-sudo certbot certonly --webroot -w /var/www/certbot \
-  -d auto.minelife.club \
-  --agree-tos -m admin@minelife.club --no-eff-email
-```
-
-> Альтернатива в одну команду (certbot сам правит конфиг):
-> `sudo certbot --nginx -d auto.minelife.club`
-
-После выпуска — раскомментируйте блок `:443` и перезагрузите nginx:
-
-```bash
-sudo nginx -t && sudo systemctl reload nginx
-```
-
-Автопродление уже настроено таймером systemd. Проверка:
-
-```bash
-sudo certbot renew --dry-run
-```
+> **Почему certbot выдал 404:** Let's Encrypt стучался на IP Cloudflare, а nginx на origin
+> был настроен на старый домен `auto.minelife.club` и не отдавал challenge для
+> `auto.minestill.fun`. С Origin-сертификатом этот шаг не нужен вовсе.
 
 ## 5. Проверка
 
 ```bash
-curl -I https://auto.minelife.club
-curl https://auto.minelife.club/api/health     # {"status":"ok",...}
+curl -I https://auto.minestill.fun
+curl https://auto.minestill.fun/api/health     # {"status":"ok",...}
 ```
 
-Затем в @BotFather укажите Mini App URL: `https://auto.minelife.club`.
+Затем в @BotFather укажите Mini App URL: `https://auto.minestill.fun`.
 
 ## Порты
 

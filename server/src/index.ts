@@ -4,6 +4,7 @@ import { config } from './config.js';
 import { initSchema } from './db/index.js';
 import { seedCars } from './db/seed.js';
 import { authMiddleware } from './auth/middleware.js';
+import { startScheduler } from './services/scheduler.js';
 import { meRouter } from './routes/me.js';
 import { searchesRouter } from './routes/searches.js';
 import { carsRouter } from './routes/cars.js';
@@ -55,4 +56,5 @@ app.listen(config.port, () => {
   if (config.allowInsecureAuth) {
     console.log('[server] Режим разработки: авторизация без initData разрешена (DEV_USER).');
   }
+  startScheduler();
 });

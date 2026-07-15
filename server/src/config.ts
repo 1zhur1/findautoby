@@ -17,6 +17,11 @@ export const config = {
   // требует patchright + `npx patchright install chromium` и проверки на сервере.
   avbyEnabled: bool(process.env.AVBY_ENABLED, false),
   avbyHeadful: bool(process.env.AVBY_HEADFUL, false),
+  // Прокси для av.by (если IP сервера блокируется). Формат: http://user:pass@host:port или socks5://host:port
+  avbyProxy: process.env.AVBY_PROXY ?? '',
+  // Периодическая проверка активных поисков (24/7)
+  schedulerEnabled: bool(process.env.SCHEDULER_ENABLED, true),
+  schedulerIntervalMin: Number(process.env.SCHEDULER_INTERVAL_MIN ?? 10),
 } as const;
 
 // Предупреждаем о небезопасной конфигурации на старте
