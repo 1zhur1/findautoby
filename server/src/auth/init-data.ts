@@ -30,26 +30,29 @@ export function validateInitData(
   const hash = params.get('hash');
   if (!hash) return { ok: false, reason: 'hash is missing' };
 
-  // Собираем data_check_string из всех полей, кроме hash, отсортированных по ключу.
-  // Поле signature (если присутствует) в проверку hash не входит.
-  const pairs: string[] = [];
-  for (const [key, value] of params.entries()) {
-    if (key === 'hash' || key === 'signature') continue;
-    pairs.push(`${key}=${value}`);
-  }
-  pairs.sort();
-  const dataCheckString = pairs.join('\n');
+  // Секретный ключ: HMAC_SHA256(bot_token, key="WebAppData")
+  const secretKey = crypto.createHmac('sha256', 'WebAppData').update(botToken.trim()).digest();
 
-  const secretKey = crypto.createHmac('sha256', 'WebAppData').update(botToken).digest();
-  const computedHash = crypto
-    .createHmac('sha256', secretKey)
-    .update(dataCheckString)
-    .digest('hex');
+  // Считаем hash по data_check_string. Разные версии клиента по-разному учитывают
+  // поле signature, поэтому проверяем оба варианта: без signature и с ним.
+  const computeHash = (excludeSignature: boolean): string => {
+    const pairs: string[] = [];
+    for (const [key, value] of params.entries()) {
+      if (key === 'hash') continue;
+      if (excludeSignature && key === 'signature') continue;
+      pairs.push(`${key}=${value}`);
+    }
+    pairs.sort();
+    return crypto.createHmac('sha256', secretKey).update(pairs.join('\n')).digest('hex');
+  };
 
-  // Сравнение в постоянном времени
-  const a = Buffer.from(computedHash, 'hex');
-  const b = Buffer.from(hash, 'hex');
-  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+  const target = Buffer.from(hash, 'hex');
+  const matches = (computed: string): boolean => {
+    const a = Buffer.from(computed, 'hex');
+    return a.length === target.length && crypto.timingSafeEqual(a, target);
+  };
+
+  if (!matches(computeHash(true)) && !matches(computeHash(false))) {
     return { ok: false, reason: 'hash mismatch' };
   }
 

@@ -7,7 +7,7 @@ function bool(value: string | undefined, fallback: boolean): boolean {
 
 export const config = {
   port: Number(process.env.PORT ?? 8000),
-  botToken: process.env.TELEGRAM_BOT_TOKEN ?? '',
+  botToken: (process.env.TELEGRAM_BOT_TOKEN ?? '').trim(),
   allowInsecureAuth: bool(process.env.ALLOW_INSECURE_AUTH, false),
   initDataMaxAgeSec: Number(process.env.INIT_DATA_MAX_AGE_SEC ?? 86400),
   corsOrigin: process.env.CORS_ORIGIN ?? '*',
