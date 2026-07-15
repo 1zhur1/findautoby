@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { config } from '@config';
+import { getTelegramInitData } from './telegram';
 
 export const apiClient = axios.create({
   baseURL: config.api.baseURL,
@@ -11,6 +12,12 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (request) => {
+    // Передаём подписанный initData бэкенду для валидации пользователя.
+    // Стандарт для Telegram Mini Apps: заголовок Authorization: tma <initData>.
+    const initData = getTelegramInitData();
+    if (initData) {
+      request.headers.set('Authorization', `tma ${initData}`);
+    }
     return request;
   },
   (error) => {

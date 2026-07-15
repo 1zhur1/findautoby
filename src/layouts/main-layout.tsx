@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { BottomNav } from '@widgets/navigation/bottom-nav';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
+import { useTelegramBackButton } from '@hooks';
 
 interface MainLayoutProps {
   children?: ReactNode;
@@ -21,6 +22,7 @@ const pageTransition = {
 
 export function MainLayout({ children }: MainLayoutProps) {
   const location = useLocation();
+  useTelegramBackButton();
 
   return (
     <div className="relative mx-auto flex min-h-dvh max-w-lg flex-col bg-zinc-950 text-white">

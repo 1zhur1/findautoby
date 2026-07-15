@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion';
 import { Text, Card, Badge, SourceBadge } from '@ui';
-import { Search, ChevronRight, ToggleLeft, ToggleRight, MoreHorizontal } from 'lucide-react';
+import { Search, ToggleLeft, ToggleRight, MoreHorizontal } from 'lucide-react';
 import type { Search as SearchType } from '@mocks/searches';
-import { cn } from '@shared/utils';
 
 interface SearchCardProps {
   search: SearchType;

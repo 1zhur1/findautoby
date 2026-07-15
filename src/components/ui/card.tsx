@@ -1,4 +1,4 @@
-import { type ReactNode, type ButtonHTMLAttributes } from 'react';
+import { type ReactNode } from 'react';
 import { cn } from '@shared/utils';
 import { motion } from 'framer-motion';
 
