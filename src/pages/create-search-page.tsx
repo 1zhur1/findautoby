@@ -1,14 +1,5 @@
-<<<<<<< HEAD
 import { ArrowLeft, Car, Search, Fuel, Cog, MapPin, Globe, Check, ChevronDown, ChevronUp } from 'lucide-react';
 import { BrandSelector } from '@widgets/search/brand-selector';
-=======
-<<<<<<< HEAD
-import { ArrowLeft, Car, Search, Fuel, Cog, Gauge, MapPin, Globe, Check, ChevronDown, ChevronUp } from 'lucide-react';
-import { BrandSelector } from '@widgets/search/brand-selector';
-=======
-import { ArrowLeft, Car, Search, Fuel, Cog, MapPin, Globe, Check, ChevronDown, ChevronUp } from 'lucide-react';
->>>>>>> e12c83f1210f450e00399ae41c76113d231f0fae
->>>>>>> 942ffb51dc2767837a0565c7f055b471671ec63f
 import { Text, Button, Input, Card } from '@ui';
 import { SourceBadge } from '@ui';
 import { useNavigate } from 'react-router-dom';
