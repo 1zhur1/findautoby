@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Edit3, Pause, Trash2, Search, Clock, Globe, Bell, MapPin } from 'lucide-react';
+import { ArrowLeft, Edit3, Pause, Trash2, Search, Clock, Bell, MapPin } from 'lucide-react';
 import { Text, Card, Badge, SourceBadge, Button, SectionHeader } from '@ui';
 import { searches } from '@mocks/searches';
 import { motion } from 'framer-motion';

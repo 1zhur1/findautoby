@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Text, Card, Badge, SourceBadge, Button } from '@ui';
+import { Text, Card, SourceBadge } from '@ui';
 import { Heart, MapPin, Clock, ExternalLink } from 'lucide-react';
 import type { Car } from '@mocks/cars';
 

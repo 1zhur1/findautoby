@@ -1,7 +1,7 @@
 import { Moon, Sun, Globe, Bell, Shield, MessageCircle, Info, LogOut, Crown, Search, Bell as BellIcon, User, ChevronRight } from 'lucide-react';
 import { Text, Card, Button } from '@ui';
 import { useThemeStore } from '@store';
-import { profile } from '@mocks/profile';
+import { useTelegramUser } from '@hooks';
 import { motion } from 'framer-motion';
 
 const fadeUp = (delay = 0) => ({
@@ -12,6 +12,7 @@ const fadeUp = (delay = 0) => ({
 
 export function ProfilePage() {
   const { mode, toggle } = useThemeStore();
+  const profile = useTelegramUser();
 
   const statCards = [
     { id: 'premium', icon: Crown, label: 'Premium', value: profile.premium ? '✓' : 'Нет', color: 'text-primary', bg: 'bg-primary/10' },

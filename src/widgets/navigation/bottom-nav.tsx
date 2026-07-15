@@ -3,6 +3,7 @@ import { Home, Search, Heart, Bell, User } from 'lucide-react';
 import { cn } from '@shared/utils';
 import { motion } from 'framer-motion';
 import { ROUTES } from '@shared/constants';
+import { haptic } from '@shared/lib/telegram';
 
 const navItems = [
   { id: 'home', icon: Home, path: ROUTES.HOME, label: 'Главная' },
@@ -28,7 +29,10 @@ export function BottomNav() {
               return (
                 <motion.button
                   key={item.id}
-                  onClick={() => navigate(item.path)}
+                  onClick={() => {
+                    if (!isActive) haptic.selection();
+                    navigate(item.path);
+                  }}
                   whileTap={{ scale: 0.9 }}
                   className={cn(
                     'relative flex flex-col items-center justify-center gap-0.5 rounded-xl px-3 py-2 transition-colors',

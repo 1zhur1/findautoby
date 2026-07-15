@@ -1,4 +1,4 @@
-import { ArrowLeft, Car, Search, Fuel, Cog, Gauge, MapPin, Globe, Check, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowLeft, Car, Search, Fuel, Cog, MapPin, Globe, Check, ChevronDown, ChevronUp } from 'lucide-react';
 import { Text, Button, Input, Card } from '@ui';
 import { SourceBadge } from '@ui';
 import { useNavigate } from 'react-router-dom';
@@ -165,12 +165,10 @@ function PillsSelect({
   options,
   selected,
   onChange,
-  columns = 3,
 }: {
   options: readonly string[];
   selected: string;
   onChange: (v: string) => void;
-  columns?: number;
 }) {
   return (
     <div className="flex flex-wrap gap-2">
@@ -376,7 +374,7 @@ function SectionContent({ id }: { id: SectionId }) {
             <Text variant="caption" weight="semibold" className="mb-1.5 block text-zinc-400">
               Город / Регион
             </Text>
-            <PillsSelect options={CITIES} selected={city} onChange={setCity} columns={3} />
+            <PillsSelect options={CITIES} selected={city} onChange={setCity} />
           </div>
           <div>
             <Text variant="caption" weight="semibold" className="mb-1.5 block text-zinc-400">
