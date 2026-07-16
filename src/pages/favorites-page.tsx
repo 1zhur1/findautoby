@@ -16,7 +16,7 @@ export function FavoritesPage() {
         transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
         className="mb-6"
       >
-        <Text variant="h1" weight="bold" className="mb-1">
+        <Text variant="h1" weight="bold" className="mb-1 text-slate-100">
           Избранное
         </Text>
         <Text variant="body" color="secondary">
@@ -33,7 +33,7 @@ export function FavoritesPage() {
         </div>
       ) : (
         <EmptyState
-          icon={<HeartIllustration className="h-32 w-full text-zinc-600" />}
+          icon={<HeartIllustration className="h-32 w-full text-slate-700" />}
           title="Нет избранных"
           description="Сохраняйте интересные автомобили, чтобы не потерять их"
         />

@@ -27,7 +27,7 @@ export function HomePage() {
           <Text variant="caption" color="secondary" className="mb-0.5">
             {greeting} 👋
           </Text>
-          <Text variant="h2" weight="bold" className="text-white">
+          <Text variant="h2" weight="bold" className="text-slate-100">
             {displayName}
           </Text>
         </div>
@@ -35,9 +35,9 @@ export function HomePage() {
           <motion.button
             whileTap={{ scale: 0.92 }}
             onClick={() => navigate('/notifications')}
-            className="relative flex h-[42px] w-[42px] items-center justify-center rounded-xl bg-zinc-800 transition-colors hover:bg-zinc-700"
+            className="relative flex h-[42px] w-[42px] items-center justify-center rounded-xl bg-[#1E1E2A] transition-colors hover:bg-[#2A2A3A]"
           >
-            <Bell className="h-5 w-5 text-zinc-400" />
+            <Bell className="h-5 w-5 text-slate-400" />
             <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-danger" />
           </motion.button>
           <motion.button
@@ -60,7 +60,7 @@ export function HomePage() {
       <div className="mt-8">
         <SectionHeader title="Последняя активность" subtitle="Уведомления за сегодня" />
         <EmptyState
-          icon={<BellIllustration className="h-32 w-full text-zinc-600" />}
+          icon={<BellIllustration className="h-32 w-full text-slate-700" />}
           title="Нет активности"
           description="Когда появятся новые автомобили, уведомления будут здесь"
         />

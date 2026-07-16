@@ -38,13 +38,13 @@ export function ProfilePage() {
         <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-dark shadow-lg shadow-primary/20">
           <User className="h-9 w-9 text-white" />
         </div>
-        <Text variant="h2" weight="bold">
+        <Text variant="h2" weight="bold" className="text-slate-100">
           {profile.firstName} {profile.lastName}
         </Text>
         <Text variant="body" color="secondary" className="mt-0.5">
           @{profile.username}
         </Text>
-        <div className="mt-2 rounded-lg bg-zinc-800 px-3 py-1">
+        <div className="mt-2 rounded-lg bg-[#1E1E2A] px-3 py-1">
           <Text variant="caption" color="tertiary">ID: {profile.telegramId}</Text>
         </div>
       </motion.div>
@@ -58,7 +58,7 @@ export function ProfilePage() {
               <div className={`mb-2 flex h-10 w-10 items-center justify-center rounded-xl ${stat.bg}`}>
                 <Icon className={`h-5 w-5 ${stat.color}`} />
               </div>
-              <Text variant="h4" weight="bold">{stat.value}</Text>
+              <Text variant="h4" weight="bold" className="text-slate-100">{stat.value}</Text>
               <Text variant="caption" color="tertiary">{stat.label}</Text>
             </Card>
           );
@@ -75,11 +75,11 @@ export function ProfilePage() {
               <Card padding="md" hoverable onClick={item.onClick} className="w-full">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-[42px] w-[42px] items-center justify-center rounded-xl bg-zinc-800">
-                      <Icon className="h-5 w-5 text-zinc-300" />
+                    <div className="flex h-[42px] w-[42px] items-center justify-center rounded-xl bg-[#1E1E2A]">
+                      <Icon className="h-5 w-5 text-slate-300" />
                     </div>
                     <div>
-                      <Text variant="body" weight="medium">{item.label}</Text>
+                      <Text variant="body" weight="medium" className="text-slate-100">{item.label}</Text>
                       <Text variant="caption" color="tertiary" className={!item.value ? 'invisible' : ''}>{item.value || 'placeholder'}</Text>
                     </div>
                   </div>
@@ -88,7 +88,7 @@ export function ProfilePage() {
                       <div className={`h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${mode === 'dark' ? 'translate-x-4' : 'translate-x-0'}`} />
                     </div>
                   ) : (
-                    <ChevronRight className="h-5 w-5 text-zinc-600" />
+                    <ChevronRight className="h-5 w-5 text-slate-600" />
                   )}
                 </div>
               </Card>

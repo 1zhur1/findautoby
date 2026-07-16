@@ -38,15 +38,24 @@ export function BottomNav() {
                     'relative flex flex-col items-center justify-center gap-0.5 rounded-xl px-3 py-2 transition-colors',
                     isActive
                       ? 'text-primary'
-                      : 'text-zinc-500 hover:text-zinc-300',
+                      : 'text-zinc-600 hover:text-zinc-400',
                   )}
                 >
                   {isActive && (
-                    <motion.div
-                      layoutId="nav-indicator"
-                      className="absolute inset-0 rounded-xl bg-primary/10"
-                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    />
+                    <>
+                      {/* Glow background */}
+                      <motion.div
+                        layoutId="nav-indicator"
+                        className="absolute inset-0 rounded-xl bg-primary/8"
+                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                      />
+                      {/* DRL-style underline glow */}
+                      <motion.div
+                        layoutId="nav-drl"
+                        className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full bg-gradient-to-r from-transparent via-primary to-transparent opacity-80"
+                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                      />
+                    </>
                   )}
                   <div className="relative">
                     <Icon className="h-6 w-6" />
