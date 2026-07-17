@@ -45,7 +45,7 @@ export function CarCard({ car, index = 0, onOpen, onFavorite }: CarCardProps) {
       <Card padding="md" hoverable className="w-full" onClick={handleOpen}>
         <div className="flex gap-3">
           {/* Фото объявления */}
-          <div className="relative h-24 w-32 shrink-0 overflow-hidden rounded-xl bg-zinc-800">
+          <div className="relative h-24 w-32 shrink-0 overflow-hidden rounded-xl bg-[#0F0F18] border border-[#1E1E2A]">
             {showImage ? (
               <img
                 src={car.imageUrl}
@@ -65,7 +65,7 @@ export function CarCard({ car, index = 0, onOpen, onFavorite }: CarCardProps) {
                   e.stopPropagation();
                   onFavorite();
                 }}
-                className="absolute right-1.5 top-1.5 rounded-full bg-black/40 p-1.5 backdrop-blur-sm transition-colors hover:bg-black/60"
+                className="absolute right-1.5 top-1.5 rounded-full bg-black/50 p-1.5 backdrop-blur-sm transition-colors hover:bg-black/70"
               >
                 <Heart className="h-3.5 w-3.5 text-white" />
               </button>
@@ -73,11 +73,11 @@ export function CarCard({ car, index = 0, onOpen, onFavorite }: CarCardProps) {
           </div>
 
           <div className="min-w-0 flex-1">
-            <Text variant="body" weight="semibold" className="truncate">
+            <Text variant="body" weight="semibold" className="truncate text-slate-100">
               {car.title}
             </Text>
             <div className="mt-1 flex items-baseline gap-1">
-              <Text variant="h4" weight="bold" className="text-primary">
+              <Text variant="h4" weight="bold" className="text-gradient-amber tabular-nums">
                 {formatPrice(car.price, car.currency)}
               </Text>
             </div>
@@ -86,15 +86,15 @@ export function CarCard({ car, index = 0, onOpen, onFavorite }: CarCardProps) {
               <SourceBadge source={car.source} size="sm" />
               {car.location && (
                 <>
-                  <span className="text-zinc-700">·</span>
-                  <div className="flex items-center gap-1 text-zinc-500">
+                  <span className="text-slate-700">·</span>
+                  <div className="flex items-center gap-1 text-slate-500">
                     <MapPin className="h-3 w-3" />
                     <Text variant="caption" color="tertiary">{car.location}</Text>
                   </div>
                 </>
               )}
-              <span className="text-zinc-700">·</span>
-              <div className="flex items-center gap-1 text-zinc-500">
+              <span className="text-slate-700">·</span>
+              <div className="flex items-center gap-1 text-slate-500">
                 <Clock className="h-3 w-3" />
                 <Text variant="caption" color="tertiary">{timeAgo(car.createdAt)}</Text>
               </div>

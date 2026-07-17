@@ -23,7 +23,7 @@ export function SearchesPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
       >
-        <Text variant="h1" weight="bold" className="mb-1">
+        <Text variant="h1" weight="bold" className="mb-1 text-slate-100">
           Поиски
         </Text>
         <Text variant="body" color="secondary" className="mb-6">
@@ -60,7 +60,7 @@ export function SearchesPage() {
         </div>
       ) : (
         <EmptyState
-          icon={<SearchIllustration className="h-32 w-full text-zinc-600" />}
+          icon={<SearchIllustration className="h-32 w-full text-slate-700" />}
           title="Нет активных поисков"
           description="Создайте первый поиск, чтобы мы начали искать автомобили"
           action={{ label: 'Создать поиск', onClick: () => navigate('/create-search') }}

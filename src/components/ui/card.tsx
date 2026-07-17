@@ -19,9 +19,9 @@ const paddingStyles = {
 };
 
 const variantStyles = {
-  default: 'bg-zinc-900/80 border border-zinc-800',
-  glass: 'bg-zinc-900/40 backdrop-blur-xl border border-white/5',
-  elevated: 'bg-zinc-900 border border-zinc-800 shadow-lg shadow-black/20',
+  default: 'bg-[#14141E]/90 border border-[#1E1E2A]',
+  glass: 'bg-[#14141E]/40 backdrop-blur-xl border border-white/5',
+  elevated: 'bg-[#14141E] border border-[#1E1E2A] shadow-lg shadow-black/30',
 };
 
 export function Card({
@@ -32,6 +32,10 @@ export function Card({
   onClick,
   className,
 }: CardProps) {
+  // DRL Glow — светящаяся линия в стиле дневных ходовых огней
+  const drlClass = variant === 'default' ? 'drl-glow' : '';
+  const drlActiveClass = hoverable || onClick ? 'drl-glow-active' : '';
+
   // Кликабельную карточку рендерим как div с ролью кнопки, а не <button>,
   // чтобы внутри могли находиться вложенные кнопки (валидный HTML).
   const interactiveProps = onClick
@@ -56,7 +60,9 @@ export function Card({
         'rounded-2xl text-left',
         paddingStyles[padding],
         variantStyles[variant],
-        hoverable && 'cursor-pointer transition-colors hover:border-zinc-700',
+        drlClass,
+        hoverable && drlActiveClass,
+        hoverable && 'cursor-pointer transition-colors hover:border-cyan-800/50',
         className,
       )}
       {...interactiveProps}

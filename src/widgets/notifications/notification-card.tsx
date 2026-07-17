@@ -45,7 +45,7 @@ export function NotificationCard({ notification, index = 0, onClick }: Notificat
         onClick={handleOpen}
         className={cn(
           'relative w-full overflow-hidden',
-          notification.isNew && 'border-l-2 border-l-primary',
+          notification.isNew && 'drl-glow-active',
         )}
       >
         <div className="flex items-start gap-3">
@@ -53,7 +53,7 @@ export function NotificationCard({ notification, index = 0, onClick }: Notificat
           <div
             className={cn(
               'relative flex h-16 w-20 shrink-0 items-center justify-center overflow-hidden rounded-xl',
-              notification.isNew ? 'bg-primary/15' : 'bg-zinc-800',
+              notification.isNew ? 'bg-primary/15' : 'bg-[#1E1E2A]',
             )}
           >
             {showImage ? (
@@ -66,7 +66,7 @@ export function NotificationCard({ notification, index = 0, onClick }: Notificat
               />
             ) : (
               <Bell
-                className={cn('h-5 w-5', notification.isNew ? 'text-primary' : 'text-zinc-500')}
+                className={cn('h-5 w-5', notification.isNew ? 'text-primary' : 'text-slate-500')}
               />
             )}
           </div>
@@ -74,7 +74,7 @@ export function NotificationCard({ notification, index = 0, onClick }: Notificat
           <div className="min-w-0 flex-1">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
-                <Text variant="body" weight="semibold" className="truncate">
+                <Text variant="body" weight="semibold" className="truncate text-slate-100">
                   {notification.carTitle}
                 </Text>
                 <Text variant="caption" color="secondary" className="mt-0.5 line-clamp-1">
@@ -89,13 +89,13 @@ export function NotificationCard({ notification, index = 0, onClick }: Notificat
             </div>
 
             <div className="mt-2 flex items-center gap-2">
-              <Text variant="h4" weight="bold" className="text-primary">
+              <Text variant="h4" weight="bold" className="text-gradient-amber tabular-nums">
                 {notification.price.toLocaleString()} {notification.currency}
               </Text>
-              <span className="text-zinc-700">·</span>
+              <span className="text-slate-700">·</span>
               <SourceBadge source={notification.source} size="sm" />
-              <span className="text-zinc-700">·</span>
-              <div className="flex items-center gap-1 text-zinc-500">
+              <span className="text-slate-700">·</span>
+              <div className="flex items-center gap-1 text-slate-500">
                 <Clock className="h-3 w-3" />
                 <Text variant="caption" color="tertiary">
                   {timeAgo(notification.createdAt)}

@@ -24,9 +24,9 @@ const weightStyles: Record<TextWeight, string> = {
 };
 
 const colorStyles: Record<TextColor, string> = {
-  primary: 'text-white',
-  secondary: 'text-zinc-400',
-  tertiary: 'text-zinc-500',
+  primary: 'text-slate-100',
+  secondary: 'text-slate-400',
+  tertiary: 'text-slate-500',
   brand: 'text-primary',
   danger: 'text-danger',
   success: 'text-success',

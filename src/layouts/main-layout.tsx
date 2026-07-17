@@ -25,7 +25,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   useTelegramBackButton();
 
   return (
-    <div className="relative mx-auto flex min-h-dvh max-w-lg flex-col bg-zinc-950 text-white">
+    <div className="relative mx-auto flex min-h-dvh max-w-lg flex-col bg-[#08080C] text-slate-100">
       <div className="safe-area-top" />
       <div className="h-1" />
 

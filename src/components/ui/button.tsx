@@ -3,7 +3,7 @@ import { cn } from '@shared/utils';
 import { motion } from 'framer-motion';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'accent';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   isLoading?: boolean;
   leftIcon?: ReactNode;
@@ -31,11 +31,13 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       primary:
         'bg-primary text-white hover:bg-primary-dark active:bg-primary-dark shadow-lg shadow-primary/20',
       secondary:
-        'bg-zinc-800 text-white hover:bg-zinc-700 active:bg-zinc-600 border border-zinc-700/50',
+        'bg-[#1E1E2A] text-white hover:bg-[#2A2A3A] active:bg-[#35354A] border border-[#2A2A3A]',
       ghost:
-        'bg-transparent text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50',
+        'bg-transparent text-zinc-500 hover:text-zinc-300 hover:bg-white/5',
       danger:
         'bg-danger/10 text-danger hover:bg-danger/20 active:bg-danger/30 border border-danger/15',
+      accent:
+        'bg-accent text-white hover:bg-accent-dark active:bg-accent-dark shadow-lg shadow-accent/20',
     };
 
     const sizes = {

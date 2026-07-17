@@ -19,7 +19,7 @@ export function NotificationsPage() {
         transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
         className="mb-6"
       >
-        <Text variant="h1" weight="bold" className="mb-1">
+        <Text variant="h1" weight="bold" className="mb-1 text-slate-100">
           Уведомления
         </Text>
         <Text variant="body" color="secondary">
@@ -61,7 +61,7 @@ export function NotificationsPage() {
         </div>
       ) : (
         <EmptyState
-          icon={<BellIllustration className="h-32 w-full text-zinc-600" />}
+          icon={<BellIllustration className="h-32 w-full text-slate-700" />}
           title="Нет уведомлений"
           description="Новые уведомления о найденных автомобилях будут появляться здесь"
         />

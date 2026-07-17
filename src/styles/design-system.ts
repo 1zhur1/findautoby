@@ -1,5 +1,5 @@
 /**
- * Единая дизайн-система FindAuto
+ * Единая дизайн-система FindAuto — Midnight Dashboard
  * Все значения должны использоваться строго в рамках этих токенов
  */
 
@@ -49,26 +49,26 @@ export const DESIGN = {
 
   /** Типографика */
   text: {
-    display: { size: '28px', lineHeight: '1.2', weight: '700' },
-    h1: { size: '26px', lineHeight: '1.25', weight: '700' },
-    h2: { size: '22px', lineHeight: '1.3', weight: '600' },
-    h3: { size: '18px', lineHeight: '1.35', weight: '600' },
-    h4: { size: '16px', lineHeight: '1.4', weight: '600' },
+    display: { size: '30px', lineHeight: '1.15', weight: '700' },
+    h1: { size: '26px', lineHeight: '1.2', weight: '700' },
+    h2: { size: '22px', lineHeight: '1.25', weight: '600' },
+    h3: { size: '18px', lineHeight: '1.3', weight: '600' },
+    h4: { size: '16px', lineHeight: '1.35', weight: '600' },
     body: { size: '15px', lineHeight: '1.45', weight: '400' },
     caption: { size: '13px', lineHeight: '1.4', weight: '400' },
-    overline: { size: '11px', lineHeight: '1.3', weight: '600', tracking: '0.05em' },
+    overline: { size: '11px', lineHeight: '1.3', weight: '600', tracking: '0.06em' },
   },
 
   /** Shadow для карточек */
   shadow: {
-    card: '0 2px 16px rgba(0,0,0,0.08)',
-    elevated: '0 8px 32px rgba(0,0,0,0.12)',
-    glass: '0 4px 24px rgba(0,0,0,0.06)',
+    card: '0 2px 16px rgba(34, 211, 238, 0.04)',
+    elevated: '0 8px 32px rgba(0,0,0,0.2)',
+    glass: '0 4px 24px rgba(0,0,0,0.08)',
   },
 
   /** Анимации */
   animation: {
-    spring: { type: 'spring' as const, stiffness: 300, damping: 28 },
+    spring: { type: 'spring' as const, stiffness: 350, damping: 28 },
     smooth: { duration: 0.35, ease: [0.4, 0, 0.2, 1] as const },
     fast: { duration: 0.18, ease: [0.4, 0, 0.2, 1] as const },
   },
