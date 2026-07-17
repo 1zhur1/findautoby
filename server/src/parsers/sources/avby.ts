@@ -1,5 +1,6 @@
 import { config } from '../../config.js';
 import { getBrowserContext, passSafeline } from '../browser.js';
+import { matchesFilters } from '../match.js';
 import type { Car, CarSource, ParserFilters } from '../types.js';
 import type { Currency } from '../../types.js';
 
@@ -61,21 +62,6 @@ function extractOffers(json: any): AvOffer[] {
   if (!json) return [];
   if (Array.isArray(json)) return json;
   return json.offers ?? json.adverts ?? json.data?.offers ?? json.items ?? [];
-}
-
-function matches(car: Car, f: ParserFilters): boolean {
-  if (f.brand && car.brand && car.brand.toLowerCase() !== f.brand.toLowerCase()) return false;
-  const models = (f.models ?? []).map((m) => m.toLowerCase()).filter(Boolean);
-  if (models.length && car.title) {
-    const t = car.title.toLowerCase();
-    if (!models.some((m) => t.includes(m))) return false;
-  }
-  if (f.priceMin && car.price && car.price < f.priceMin) return false;
-  if (f.priceMax && car.price && car.price > f.priceMax) return false;
-  if (f.yearFrom && car.year && car.year < f.yearFrom) return false;
-  if (f.yearTo && car.year && car.year > f.yearTo) return false;
-  if (f.mileageTo && car.mileage > f.mileageTo) return false;
-  return true;
 }
 
 export const avbySource: CarSource = {
@@ -149,7 +135,7 @@ export const avbySource: CarSource = {
       for (const offer of captured) {
         const car = toCar(offer);
         if (seen.has(car.id)) continue;
-        if (!matches(car, filters)) continue;
+        if (!matchesFilters(car, filters)) continue;
         seen.add(car.id);
         results.push(car);
         if (results.length >= limit) break;

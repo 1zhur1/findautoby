@@ -26,10 +26,19 @@ export function searchToFilters(search: Search): ParserFilters {
     currency: search.currency,
     yearFrom: search.yearFrom,
     yearTo: search.yearTo,
+    mileageFrom: search.mileageFrom,
     mileageTo: search.mileageTo,
-    transmission: search.transmission,
-    bodyType: search.bodyType,
-    engineType: search.engineType,
+    engineType: search.engineType || undefined,
+    engineCapacityFrom: search.engineCapacityFrom,
+    engineCapacityTo: search.engineCapacityTo,
+    enginePowerFrom: search.enginePowerFrom,
+    enginePowerTo: search.enginePowerTo,
+    transmission: search.transmission || undefined,
+    drive: search.drive || undefined,
+    bodyType: search.bodyType || undefined,
+    color: search.color || undefined,
+    city: search.city || undefined,
+    doors: search.doors,
   };
 }
 

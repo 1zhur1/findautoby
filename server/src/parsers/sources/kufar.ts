@@ -1,4 +1,5 @@
 import { fetchJson } from '../http.js';
+import { matchesFilters } from '../match.js';
 import type { Car, CarSource, ParserFilters } from '../types.js';
 
 const BASE = 'https://api.kufar.by/search-api/v2/search/rendered-paginated';
@@ -49,6 +50,12 @@ function toCar(ad: KufarAd): Car {
   const capacityLabel = param(ad, 'cars_capacity')?.vl ?? ''; // "1.5 л"
   const capacity = parseFloat(capacityLabel) || 0;
 
+  // Коробка: если тип автомата уточнён (Вариатор/Робот) — берём его, иначе общий тип
+  const autoGearbox = param(ad, 'cars_autogearbox')?.vl ?? '';
+  const gearbox = /вариатор|робот/i.test(autoGearbox)
+    ? normalizeGearbox(autoGearbox)
+    : normalizeGearbox(param(ad, 'cars_gearbox')?.vl ?? '');
+
   return {
     id: `kufar:${ad.ad_id}`,
     brand: '',
@@ -60,12 +67,13 @@ function toCar(ad: KufarAd): Car {
     engineType: param(ad, 'cars_engine')?.vl ?? '',
     engineCapacity: capacity,
     enginePower: 0,
-    transmission: normalizeGearbox(param(ad, 'cars_gearbox')?.vl ?? ''),
+    transmission: gearbox,
     drive: param(ad, 'cars_drive')?.vl ?? '',
     bodyType: param(ad, 'cars_type')?.vl ?? '',
     color: param(ad, 'cars_color')?.vl ?? '',
     doors: 0,
-    location: param(ad, 'area')?.vl ?? param(ad, 'region')?.vl ?? '',
+    // region — это город (Минск/Гродно); area — район внутри города
+    location: param(ad, 'region')?.vl ?? param(ad, 'area')?.vl ?? '',
     source: 'kufar',
     imageUrl: imageUrl(ad),
     hasAccidents: false,
@@ -88,7 +96,9 @@ export const kufarSource: CarSource = {
     params.set('lang', 'ru');
     params.set('cur', 'USD');
     params.set('sort', 'lst.d'); // новые сверху
-    params.set('size', String(Math.min(limit, 30)));
+    // Берём полную страницу: фильтры применяются на нашей стороне, из маленькой
+    // выборки после фильтрации почти ничего не осталось бы.
+    params.set('size', '30');
 
     // Текстовый запрос: марка + модели
     const queryParts = [filters.brand, ...(filters.models ?? [])].filter(Boolean);
@@ -108,10 +118,7 @@ export const kufarSource: CarSource = {
     const results: Car[] = [];
     for (const ad of data.ads ?? []) {
       const car = toCar(ad);
-      // Клиентская фильтрация по году и пробегу
-      if (filters.yearFrom && car.year && car.year < filters.yearFrom) continue;
-      if (filters.yearTo && car.year && car.year > filters.yearTo) continue;
-      if (filters.mileageTo && car.mileage > filters.mileageTo) continue;
+      if (!matchesFilters(car, filters)) continue;
       results.push(car);
       if (results.length >= limit) break;
     }

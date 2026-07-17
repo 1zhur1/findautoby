@@ -9,10 +9,19 @@ export interface ParserFilters {
   currency: Currency;
   yearFrom?: number;
   yearTo?: number;
+  mileageFrom?: number;
   mileageTo?: number;
-  transmission?: string;
-  bodyType?: string;
   engineType?: string;
+  engineCapacityFrom?: number;
+  engineCapacityTo?: number;
+  enginePowerFrom?: number;
+  enginePowerTo?: number;
+  transmission?: string;
+  drive?: string;
+  bodyType?: string;
+  color?: string;
+  city?: string;
+  doors?: number;
 }
 
 /** Единый интерфейс площадки-источника. */

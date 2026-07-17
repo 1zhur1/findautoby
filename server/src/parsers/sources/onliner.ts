@@ -1,4 +1,5 @@
 import { fetchJson } from '../http.js';
+import { matchesFilters } from '../match.js';
 import type { Car, CarSource, ParserFilters } from '../types.js';
 import type { Currency } from '../../types.js';
 
@@ -102,21 +103,6 @@ function toCar(a: OnlinerAdvert, currency: Currency): Car {
   };
 }
 
-function matches(car: Car, advert: OnlinerAdvert, f: ParserFilters): boolean {
-  if (f.brand && car.brand.toLowerCase() !== f.brand.toLowerCase()) return false;
-  const models = (f.models ?? []).map((m) => m.toLowerCase()).filter(Boolean);
-  if (models.length) {
-    const modelName = (advert.model?.name ?? '').toLowerCase();
-    if (!models.some((m) => modelName.includes(m) || m.includes(modelName))) return false;
-  }
-  if (f.priceMin && car.price && car.price < f.priceMin) return false;
-  if (f.priceMax && car.price && car.price > f.priceMax) return false;
-  if (f.yearFrom && car.year && car.year < f.yearFrom) return false;
-  if (f.yearTo && car.year && car.year > f.yearTo) return false;
-  if (f.mileageTo && car.mileage > f.mileageTo) return false;
-  return true;
-}
-
 export const onlinerSource: CarSource = {
   id: 'onliner',
   name: 'Onliner Автобарахолка',
@@ -135,7 +121,7 @@ export const onlinerSource: CarSource = {
 
       for (const advert of data.adverts ?? []) {
         const car = toCar(advert, currency);
-        if (matches(car, advert, filters)) {
+        if (matchesFilters(car, filters)) {
           results.push(car);
           if (results.length >= limit) return results;
         }
