@@ -45,6 +45,36 @@ export async function sendMessage(
   }
 }
 
+/**
+ * Отправляет фото с подписью. Если Telegram не смог забрать картинку
+ * (битая ссылка/недоступный CDN) — возвращает false, вызывающий шлёт текст.
+ */
+export async function sendPhoto(chatId: number, photoUrl: string, caption: string): Promise<boolean> {
+  if (!config.botToken || !photoUrl) return false;
+  try {
+    const res = await fetch(`${API}/bot${config.botToken}/sendPhoto`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: chatId,
+        photo: photoUrl,
+        caption, // до 1024 символов
+        parse_mode: 'HTML',
+      }),
+      signal: AbortSignal.timeout(15000),
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => '');
+      console.warn(`[telegram] sendPhoto ${res.status}: ${body.slice(0, 120)} — шлю текстом`);
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.warn('[telegram] sendPhoto ошибка:', (error as Error).message);
+    return false;
+  }
+}
+
 /** Экранирование для parse_mode=HTML. */
 export function escapeHtml(text: string): string {
   return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

@@ -94,6 +94,8 @@ export interface Notification {
   isNew: boolean;
   createdAt: string;
   imageUrl: string;
+  /** Ссылка на объявление на площадке */
+  url?: string;
 }
 
 export interface Profile {

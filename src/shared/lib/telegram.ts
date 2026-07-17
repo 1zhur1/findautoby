@@ -31,6 +31,7 @@ interface TelegramHapticFeedback {
 }
 
 interface TelegramWebApp {
+  openLink?: (url: string, options?: { try_instant_view?: boolean }) => void;
   initData: string;
   initDataUnsafe: { user?: TelegramUser };
   version: string;
@@ -140,6 +141,20 @@ export const backButton = {
     getWebApp()?.BackButton.hide();
   },
 };
+
+/**
+ * Открывает внешнюю ссылку (объявление на площадке).
+ * Внутри Telegram — через нативный openLink, иначе — новой вкладкой.
+ */
+export function openExternal(url: string): void {
+  if (!url || url === '#') return;
+  const wa = getWebApp();
+  if (wa?.openLink) {
+    wa.openLink(url);
+    return;
+  }
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
 
 /** Тактильная отдача (безопасна вне Telegram). */
 export const haptic = {

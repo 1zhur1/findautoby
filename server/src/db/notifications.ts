@@ -15,6 +15,7 @@ export function createCarNotification(userId: number, car: Car, message: string)
     isNew: true,
     createdAt: new Date().toISOString(),
     imageUrl: car.imageUrl,
+    url: car.url,
   };
   db.prepare(
     'INSERT INTO notifications (id, user_id, is_new, created_at, data) VALUES (?, ?, 1, ?, ?)',

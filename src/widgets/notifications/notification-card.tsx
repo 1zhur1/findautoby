@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Text, Card, SourceBadge } from '@ui';
-import { Bell, Clock } from 'lucide-react';
+import { Bell, Clock, ExternalLink } from 'lucide-react';
 import type { Notification } from '@mocks/notifications';
 import { cn } from '@shared/utils';
+import { openExternal, haptic } from '@shared/lib/telegram';
 
 interface NotificationCardProps {
   notification: Notification;
@@ -11,6 +13,16 @@ interface NotificationCardProps {
 }
 
 export function NotificationCard({ notification, index = 0, onClick }: NotificationCardProps) {
+  const [imgFailed, setImgFailed] = useState(false);
+  const showImage = !!notification.imageUrl && !imgFailed;
+
+  // Переход на объявление на площадке
+  const handleOpen = () => {
+    haptic.impact('light');
+    if (onClick) onClick();
+    else if (notification.url) openExternal(notification.url);
+  };
+
   const timeAgo = (date: string) => {
     const diff = Date.now() - new Date(date).getTime();
     const hours = Math.floor(diff / 3600000);
@@ -30,25 +42,33 @@ export function NotificationCard({ notification, index = 0, onClick }: Notificat
       <Card
         padding="md"
         hoverable
-        onClick={onClick}
+        onClick={handleOpen}
         className={cn(
           'relative w-full overflow-hidden',
           notification.isNew && 'border-l-2 border-l-primary',
         )}
       >
         <div className="flex items-start gap-3">
+          {/* Фото авто из объявления */}
           <div
             className={cn(
-              'flex h-11 w-11 shrink-0 items-center justify-center rounded-xl',
+              'relative flex h-16 w-20 shrink-0 items-center justify-center overflow-hidden rounded-xl',
               notification.isNew ? 'bg-primary/15' : 'bg-zinc-800',
             )}
           >
-            <Bell
-              className={cn(
-                'h-5 w-5',
-                notification.isNew ? 'text-primary' : 'text-zinc-500',
-              )}
-            />
+            {showImage ? (
+              <img
+                src={notification.imageUrl}
+                alt={notification.carTitle}
+                loading="lazy"
+                onError={() => setImgFailed(true)}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <Bell
+                className={cn('h-5 w-5', notification.isNew ? 'text-primary' : 'text-zinc-500')}
+              />
+            )}
           </div>
 
           <div className="min-w-0 flex-1">
@@ -81,6 +101,19 @@ export function NotificationCard({ notification, index = 0, onClick }: Notificat
                   {timeAgo(notification.createdAt)}
                 </Text>
               </div>
+              {notification.url && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    haptic.impact('light');
+                    openExternal(notification.url!);
+                  }}
+                  className="ml-auto shrink-0 rounded-lg bg-primary/10 p-1.5 transition-colors hover:bg-primary/20"
+                  aria-label="Открыть объявление"
+                >
+                  <ExternalLink className="h-3.5 w-3.5 text-primary" />
+                </button>
+              )}
             </div>
           </div>
         </div>
