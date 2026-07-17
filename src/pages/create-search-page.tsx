@@ -63,7 +63,7 @@ const initialForm: FormState = {
   bodyType: '',
   color: '',
   city: '',
-  sources: ['avby', 'onliner'],
+  sources: ['onliner', 'kufar', 'avby'],
   vinRequired: false,
   noAccidents: false,
   originalMileage: false,
